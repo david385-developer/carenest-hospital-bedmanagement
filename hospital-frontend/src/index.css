@@ -1,0 +1,45 @@
+:root {
+  /* Status Colors */
+  --color-success: #2d6a4f;      /* Stable */
+  --color-info: #457b9d;         /* Improving */
+  --color-danger: #e63946;       /* Critical */
+  --color-warning: #f4a261;      /* Under Observation */
+  --color-teal: #1d7a74;         /* Recovered */
+  --color-purple: #6b5b95;       /* Referred / Rounds */
+  
+  /* Text Colors */
+  --color-text-primary: #1d3557;
+  --color-text-secondary: #6c757d;
+  
+  /* Layout BGs */
+  --color-bg-page: #f8f9fa;
+  --color-bg-card: #ffffff;
+  --color-border: #e2e8f0;
+  
+  /* Sizing Tokens */
+  --radius-card: 12px;
+  --radius-card-mobile: 8px;
+  --shadow-card: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-card-mobile: none;
+  --padding-card: 24px;
+  --padding-card-mobile: 16px;
+  --margin-section: 24px;
+  --margin-section-mobile: 16px;
+}
+
+body, button, input, select, textarea {
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: #f8f9fa;
+  color: #1e293b;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

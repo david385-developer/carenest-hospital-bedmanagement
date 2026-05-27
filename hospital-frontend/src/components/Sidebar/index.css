@@ -1,0 +1,166 @@
+.sidebar {
+  width: 240px;
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  height: calc(100vh - 64px);
+  position: sticky;
+  top: 64px;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 64px;
+}
+
+.collapse-btn {
+  background: none;
+  border: none;
+  padding: 16px;
+  cursor: pointer;
+  color: #64748b;
+  font-size: 16px;
+  align-self: flex-end;
+  transition: color 0.2s;
+}
+
+.collapse-btn:hover {
+  color: #0f766e;
+}
+
+.sidebar-menu {
+  flex: 1;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #475569;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  text-align: left;
+  width: 100%;
+}
+
+.menu-item:hover {
+  background: #eaf4f0;
+  color: #2d6a4f;
+}
+
+.menu-item.active {
+  background: #2d6a4f;
+  color: white;
+}
+
+.menu-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  padding: 0 5px;
+  margin-left: auto;
+}
+
+.menu-badge.emergency {
+  background-color: #e63946;
+}
+
+.menu-badge.info {
+  background-color: #457b9d;
+}
+
+.menu-badge.warning {
+  background-color: #f4a261;
+}
+
+.menu-icon {
+  font-size: 18px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.menu-label {
+  white-space: nowrap;
+}
+
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.system-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-dot.online {
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+.sidebar.collapsed .sidebar-menu {
+  padding: 8px;
+}
+
+.sidebar.collapsed .menu-item {
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.sidebar.collapsed .menu-icon {
+  margin: 0;
+  min-width: unset;
+}
+
+.sidebar.collapsed .collapse-btn {
+  align-self: center;
+  padding: 16px 0;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 64px;
+    height: calc(100vh - 64px);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sidebar.collapsed {
+    width: 0;
+    border-right: none;
+    overflow: hidden;
+  }
+  
+  .collapse-btn {
+    display: none;
+  }
+}

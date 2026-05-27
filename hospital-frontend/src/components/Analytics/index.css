@@ -1,0 +1,180 @@
+.analytics-page {
+  animation: fadeIn 0.3s ease;
+}
+
+.loading-card {
+  background: white;
+  border-radius: 14px;
+  padding: 60px;
+  text-align: center;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+/* Heatmap Cards */
+.heatmap-card {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.heatmap-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+}
+
+.heatmap-low {
+  border-color: #bbf7d0 !important;
+  background: #f0fdf4 !important;
+}
+
+.heatmap-moderate {
+  border-color: #fde68a !important;
+  background: #fffbeb !important;
+}
+
+.heatmap-high {
+  border-color: #fecaca !important;
+  background: #fef2f2 !important;
+}
+
+.heatmap-empty {
+  border-color: #e2e8f0 !important;
+  background: #f8fafc !important;
+}
+
+/* Ward Bars */
+.ward-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ward-bar-row {
+  display: grid;
+  grid-template-columns: 180px 1fr 140px;
+  align-items: center;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .ward-bar-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+.ward-bar-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ward-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1e293b;
+}
+
+.ward-count {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.ward-bar-track {
+  height: 24px;
+  background: #f1f5f9;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.ward-bar-fill {
+  display: flex;
+  height: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-segment {
+  cursor: pointer;
+}
+
+.bar-segment.occupied {
+  background: #ef4444;
+  transition: width 0.5s ease;
+}
+
+.bar-segment.cleaning {
+  background: #3b82f6;
+  transition: width 0.5s ease;
+}
+
+.bar-segment.available {
+  background: #22c55e;
+  transition: width 0.5s ease;
+}
+
+.ward-bar-legend {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.ward-bar-legend .legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.ward-bar-legend .legend-dot.occupied { background: #ef4444; }
+.ward-bar-legend .legend-dot.cleaning { background: #3b82f6; }
+.ward-bar-legend .legend-dot.available { background: #22c55e; }
+
+/* Status Distribution Rings */
+.status-distribution {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 20px 0;
+}
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-ring {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.status-ring-inner {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.status-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+}

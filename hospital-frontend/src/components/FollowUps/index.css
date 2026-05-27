@@ -1,0 +1,126 @@
+.followups-page {
+  animation: fadeIn 0.3s ease;
+}
+
+.followups-table-wrapper {
+  background: white;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  padding: 0;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.followups-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+
+.followups-table th {
+  padding: 14px 18px;
+  background: #f8fafc;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.followups-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #475569;
+}
+
+.followups-table tr:hover td {
+  background: #f8fafc;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.btn-update {
+  padding: 6px 14px;
+  background: #eaf4f0;
+  color: #2d6a4f;
+  border: 1px solid #c2e0d3;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-update:hover {
+  background: #2d6a4f;
+  color: white;
+}
+
+.notes-cell {
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #64748b;
+}
+
+/* Custom Dropdown style */
+.custom-dropdown-container {
+  width: 100%;
+  user-select: none;
+}
+
+.dropdown-option-item:hover {
+  background-color: #f8fafc;
+}
+
+/* Mobile Breakpoints */
+@media screen and (max-width: 667px) {
+  .followups-table {
+    display: none;
+  }
+  
+  .followups-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    background: #f8f9fa;
+  }
+  
+  .followup-card {
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media screen and (min-width: 668px) {
+  .followups-cards {
+    display: none;
+  }
+  .followups-table {
+    display: table;
+  }
+}

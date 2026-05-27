@@ -369,7 +369,4 @@ carenest/
 ## Author
 Built as a portfolio project demonstrating full-stack development skills.
 
-[Your Name] — [Your Email] — [LinkedIn/GitHub links]
-
-## License
-MIT License
+David — gollamudidavid385@gmail.com — Linkedin - https://www.linkedin.com/in/david-gollamudi/

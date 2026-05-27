@@ -12,7 +12,7 @@ const AdmissionForm = () => {
   const [success, setSuccess] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [icuStatus, setIcuStatus] = useState(null);
-  
+
   const [patientForm, setPatientForm] = useState({
     patientName: '',
     age: '',
@@ -22,7 +22,7 @@ const AdmissionForm = () => {
     bloodGroup: '',
     medicalHistory: ''
   });
-  
+
   const [admissionForm, setAdmissionForm] = useState({
     bedId: '',
     doctorId: '',
@@ -30,12 +30,11 @@ const AdmissionForm = () => {
     diagnosis: '',
     notes: ''
   });
-  
-  // On mount: fetch wards, doctors, available beds
+
   useEffect(() => {
     fetchData();
   }, []);
-  
+
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -48,7 +47,7 @@ const AdmissionForm = () => {
       ]);
       setDoctors(doctorsData);
       setAvailableBeds(bedsData);
-      
+
       if (icuBedsData && icuBedsData.length > 0) {
         const total = icuBedsData.length;
         const occupied = icuBedsData.filter(b => b.status === 'OCCUPIED').length;
@@ -61,31 +60,30 @@ const AdmissionForm = () => {
       setLoading(false);
     }
   };
-  
+
   const handlePatientChange = (e) => {
     setPatientForm({ ...patientForm, [e.target.name]: e.target.value });
   };
-  
+
   const handleAdmissionChange = (e) => {
     setAdmissionForm({ ...admissionForm, [e.target.name]: e.target.value });
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
     setSubmitting(true);
-    
+
     try {
-      // Step 1: Create patient
+
       const patientResponse = await api.post('/patients', patientForm);
       const patientId = patientResponse.id || patientResponse.patientId;
-      
+
       if (!patientId) {
         throw new Error('Failed to retrieve registered patient ID.');
       }
 
-      // Step 2: Create admission with patientId
       const admissionData = {
         patientId,
         bedId: parseInt(admissionForm.bedId),
@@ -94,12 +92,11 @@ const AdmissionForm = () => {
         diagnosis: admissionForm.diagnosis,
         notes: admissionForm.notes
       };
-      
+
       await api.post('/admissions', admissionData);
-      
+
       setSuccess('Patient admitted successfully!');
-      
-      // Reset forms
+
       setPatientForm({
         patientName: '', age: '', gender: 'male', phone: '',
         emergencyContact: '', bloodGroup: '', medicalHistory: ''
@@ -108,19 +105,17 @@ const AdmissionForm = () => {
         bedId: '', doctorId: '', admissionType: 'NORMAL',
         diagnosis: '', notes: ''
       });
-      
-      // Refresh available beds
+
       const bedsData = await api.get('/beds?status=AVAILABLE');
       setAvailableBeds(bedsData);
-      
+
     } catch (err) {
       setError(err.message || 'Failed to admit patient');
     } finally {
       setSubmitting(false);
     }
   };
-  
-  // Role guard
+
   if (!isReception() && !isAdmin()) {
     return (
       <div className="access-denied">
@@ -131,7 +126,7 @@ const AdmissionForm = () => {
       </div>
     );
   }
-  
+
   if (loading) {
     return (
       <div className="admission-form">
@@ -142,20 +137,20 @@ const AdmissionForm = () => {
       </div>
     );
   }
-  
+
   return (
     <div className="admission-form">
       <div className="page-header">
         <h2>📝 Patient Admission</h2>
       </div>
-      
+
       {error && (
         <div className="alert alert-error">
           {error}
           <button type="button" onClick={() => setError('')}>×</button>
         </div>
       )}
-      
+
       {success && (
         <div className="alert alert-success">
           {success}
@@ -169,12 +164,12 @@ const AdmissionForm = () => {
           <span style={{ fontSize: '13px' }}>ICU Bed occupancy is at {icuStatus.rate.toFixed(0)}% ({icuStatus.occupied}/{icuStatus.total} ICU beds occupied). Please prioritize emergency allocations.</span>
         </div>
       )}
-      
+
       <form onSubmit={handleSubmit}>
-        {/* Patient Details Section */}
+        {}
         <div className="card">
           <h3 className="card-title">👤 Patient Details</h3>
-          
+
           <div className="form-grid">
             <div className="form-group">
               <label>Patient Name *</label>
@@ -187,7 +182,7 @@ const AdmissionForm = () => {
                 required
               />
             </div>
-            
+
             <div className="form-group">
               <label>Age *</label>
               <input
@@ -201,7 +196,7 @@ const AdmissionForm = () => {
                 required
               />
             </div>
-            
+
             <div className="form-group">
               <label>Gender *</label>
               <select name="gender" value={patientForm.gender} onChange={handlePatientChange}>
@@ -210,7 +205,7 @@ const AdmissionForm = () => {
                 <option value="other">Other</option>
               </select>
             </div>
-            
+
             <div className="form-group">
               <label>Phone *</label>
               <input
@@ -222,7 +217,7 @@ const AdmissionForm = () => {
                 required
               />
             </div>
-            
+
             <div className="form-group">
               <label>Emergency Contact</label>
               <input
@@ -233,7 +228,7 @@ const AdmissionForm = () => {
                 placeholder="Emergency contact number"
               />
             </div>
-            
+
             <div className="form-group">
               <label>Blood Group</label>
               <input
@@ -245,7 +240,7 @@ const AdmissionForm = () => {
               />
             </div>
           </div>
-          
+
           <div className="form-group full-width">
             <label>Medical History</label>
             <textarea
@@ -257,11 +252,11 @@ const AdmissionForm = () => {
             />
           </div>
         </div>
-        
-        {/* Admission Details Section */}
+
+        {}
         <div className="card">
           <h3 className="card-title">🏥 Admission Details</h3>
-          
+
           <div className="form-grid">
             <div className="form-group">
               <label>Bed *</label>
@@ -282,7 +277,7 @@ const AdmissionForm = () => {
                 <span className="field-error">No available beds</span>
               )}
             </div>
-            
+
             <div className="form-group">
               <label>Doctor</label>
               <select
@@ -298,7 +293,7 @@ const AdmissionForm = () => {
                 ))}
               </select>
             </div>
-            
+
             <div className="form-group">
               <label>Admission Type *</label>
               <select
@@ -312,7 +307,7 @@ const AdmissionForm = () => {
                 <option value="TRANSFER">Transfer</option>
               </select>
             </div>
-            
+
             <div className="form-group">
               <label>Diagnosis</label>
               <input
@@ -324,7 +319,7 @@ const AdmissionForm = () => {
               />
             </div>
           </div>
-          
+
           <div className="form-group full-width">
             <label>Notes</label>
             <textarea
@@ -336,7 +331,7 @@ const AdmissionForm = () => {
             />
           </div>
         </div>
-        
+
         <button
           type="submit"
           className="btn-primary btn-full"

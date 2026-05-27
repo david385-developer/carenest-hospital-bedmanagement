@@ -53,7 +53,6 @@ const Dashboard = () => {
     return 'dashboard';
   };
 
-  // Initialize landing page based on role and URL hash
   const [activePage, setActivePage] = useState(() => {
     const hash = window.location.hash;
     const role = user?.role || '';
@@ -101,7 +100,7 @@ const Dashboard = () => {
     const handleHashChange = () => {
       const hash = window.location.hash;
       const role = user?.role || '';
-      
+
       let targetPage = 'dashboard';
       let patientId = null;
 
@@ -145,7 +144,6 @@ const Dashboard = () => {
         const notifData = await api.get('/notifications');
         setNotifications(notifData);
 
-        // Fetch ICU beds to determine occupancy thresholds for alert banners
         const icuBeds = await api.get('/beds?type=icu');
         if (icuBeds && icuBeds.length > 0) {
           const total = icuBeds.length;
@@ -193,7 +191,6 @@ const Dashboard = () => {
           }
         }
 
-        // Fetch doctor clinical dynamic stats
         if (user?.role === 'doctor') {
           const critData = await api.get('/api/followups/critical/count');
           setCriticalFollowupsCount(critData.count || 0);
@@ -226,7 +223,7 @@ const Dashboard = () => {
   };
 
   const renderDashboardHome = () => {
-    // Non-admins see a standard portal landing
+
     if (!isAdmin()) {
       const getProgressBarColor = (percentage) => {
         if (percentage < 70) return '#2d6a4f';
@@ -236,7 +233,7 @@ const Dashboard = () => {
 
       return (
         <div className="dashboard-home">
-          {/* Welcome Banner */}
+          {}
           <div className="card welcome-card" style={{ background: 'linear-gradient(135deg, #2d6a4f 0%, #1b4332 100%)', color: 'white', padding: '30px', borderRadius: '14px', marginBottom: '24px' }}>
             <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '12px', color: 'white' }}>Welcome back, {user?.name}!</h2>
             <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
@@ -249,7 +246,7 @@ const Dashboard = () => {
             </p>
           </div>
 
-          {/* Stats Cards Row */}
+          {}
           <div className="doctor-stats-grid" style={{ marginBottom: '24px' }}>
             <div className="doctor-stat-card" style={{ borderLeft: '4px solid #457b9d' }}>
               <div className="stat-icon">🛏️</div>
@@ -317,15 +314,15 @@ const Dashboard = () => {
                   <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: icuAlert.text }}>{icuAlert.message}</p>
                 </div>
               </div>
-              
+
               {/* Progress bar container */}
               <div style={{ marginTop: '8px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <div style={{ flex: 1, height: '8px', background: '#e2e8f0', borderRadius: '4px', overflow: 'hidden' }}>
-                    <div 
-                      style={{ 
-                        height: '100%', 
-                        width: `${icuAlert.rate || 0}%`, 
+                    <div
+                      style={{
+                        height: '100%',
+                        width: `${icuAlert.rate || 0}%`,
                         backgroundColor: getProgressBarColor(icuAlert.rate || 0),
                         borderRadius: '4px',
                         transition: 'width 0.5s ease-in-out'
@@ -353,7 +350,7 @@ const Dashboard = () => {
                 </div>
                 <span style={{ color: '#6c757d', fontSize: '12px', whiteSpace: 'nowrap' }}>2 min ago</span>
               </div>
-              
+
               <div className="activity-item" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '13px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <span className="activity-dot" style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#2d6a4f', flexShrink: 0 }}></span>
@@ -361,7 +358,7 @@ const Dashboard = () => {
                 </div>
                 <span style={{ color: '#6c757d', fontSize: '12px', whiteSpace: 'nowrap' }}>15 min ago</span>
               </div>
-              
+
               <div className="activity-item" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '13px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <span className="activity-dot" style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#e63946', flexShrink: 0 }}></span>
@@ -369,7 +366,7 @@ const Dashboard = () => {
                 </div>
                 <span style={{ color: '#6c757d', fontSize: '12px', whiteSpace: 'nowrap' }}>1 hour ago</span>
               </div>
-              
+
               <div className="activity-item" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '13px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <span className="activity-dot" style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#f4a261', flexShrink: 0 }}></span>
@@ -377,7 +374,7 @@ const Dashboard = () => {
                 </div>
                 <span style={{ color: '#6c757d', fontSize: '12px', whiteSpace: 'nowrap' }}>2 hours ago</span>
               </div>
-              
+
               <div className="activity-item" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '13px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <span className="activity-dot" style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#6c757d', flexShrink: 0 }}></span>
@@ -445,7 +442,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Occupancy Rate & Alerts */}
+        {}
         <div className="dashboard-row">
           <div className="card occupancy-card">
             <h3 className="card-title">🏥 Overall Occupancy</h3>
@@ -453,10 +450,10 @@ const Dashboard = () => {
               <div className="occupancy-circle">
                 <svg viewBox="0 0 120 120">
                   <circle className="track" cx="60" cy="60" r="50" />
-                  <circle 
-                    className="progress" 
-                    cx="60" 
-                    cy="60" 
+                  <circle
+                    className="progress"
+                    cx="60"
+                    cy="60"
                     r="50"
                     style={{
                       strokeDasharray: `${2 * Math.PI * 50}`,
@@ -489,7 +486,7 @@ const Dashboard = () => {
                         </span>
                       </div>
                     </div>
-                    <button 
+                    <button
                       onClick={() => handleMarkNotificationRead(notif.notificationId)}
                       style={{ background: 'none', border: 'none', color: '#0f766e', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}
                       type="button"
@@ -512,7 +509,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Ward Breakdown */}
+        {}
         <div className="card">
           <h3 className="card-title">🏢 Ward Breakdown</h3>
           <div className="ward-grid">
@@ -524,8 +521,8 @@ const Dashboard = () => {
                 </div>
                 <div className="ward-bars">
                   <div className="bar-container">
-                    <div 
-                      className="bar occupied" 
+                    <div
+                      className="bar occupied"
                       style={{ width: `${ward.totalBeds > 0 ? (ward.occupied / ward.totalBeds) * 100 : 0}%` }}
                     ></div>
                   </div>
@@ -544,7 +541,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Recent Emergency Admissions */}
+        {}
         <div className="card">
           <h3 className="card-title">🚨 Recent Emergency Admissions</h3>
           {stats?.recentEmergencies?.length === 0 ? (
@@ -674,10 +671,10 @@ const Dashboard = () => {
     <div className="dashboard">
       <Navbar sidebarCollapsed={sidebarCollapsed} setSidebarCollapsed={setSidebarCollapsed} />
       <div className="dashboard-body">
-        <Sidebar 
-          activePage={activePage} 
-          onPageChange={navigateTo} 
-          collapsed={sidebarCollapsed} 
+        <Sidebar
+          activePage={activePage}
+          onPageChange={navigateTo}
+          collapsed={sidebarCollapsed}
           setCollapsed={setSidebarCollapsed}
           criticalFollowupsCount={criticalFollowupsCount}
           pendingRoundsCount={pendingRoundsCount}

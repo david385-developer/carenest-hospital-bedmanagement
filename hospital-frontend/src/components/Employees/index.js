@@ -6,14 +6,12 @@ import './index.css';
 const Employees = () => {
   const { isAdmin } = useAuth();
 
-  // State
   const [employees, setEmployees] = useState([]);
   const [filteredRole, setFilteredRole] = useState('');
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
-  // Stats
   const [stats, setStats] = useState({
     total: 0,
     doctors: 0,
@@ -21,7 +19,6 @@ const Employees = () => {
     admins: 0
   });
 
-  // Modal State
   const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [modalError, setModalError] = useState('');
@@ -40,7 +37,6 @@ const Employees = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filteredRole]);
 
-  // Fetch employees list
   const fetchEmployees = async () => {
     setLoading(true);
     setErrorMsg('');
@@ -52,8 +48,7 @@ const Employees = () => {
 
       const data = await api.get(endpoint);
       setEmployees(data);
-      
-      // Calculate counts based on current database fetch
+
       if (!filteredRole) {
         const counts = data.reduce(
           (acc, curr) => {
@@ -67,7 +62,7 @@ const Employees = () => {
         );
         setStats(counts);
       } else {
-        // If query was filtered, we still want to keep the total counts accurate by doing a silent stats fetch
+
         fetchStatsSilent();
       }
     } catch (error) {
@@ -78,7 +73,6 @@ const Employees = () => {
     }
   };
 
-  // Helper to fetch statistics silently when role filter is active
   const fetchStatsSilent = async () => {
     try {
       const data = await api.get('/users');
@@ -132,7 +126,6 @@ const Employees = () => {
     }
   };
 
-  // Access Denied Render
   if (!isAdmin()) {
     return (
       <div className="employees-page" style={{ padding: '20px' }}>
@@ -170,11 +163,11 @@ const Employees = () => {
         </div>
       )}
 
-      {/* Page Header */}
+      {}
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <h2>👥 Employee Management</h2>
-          <select 
+          <select
             value={filteredRole}
             onChange={(e) => setFilteredRole(e.target.value)}
             className="filter-select"
@@ -191,7 +184,7 @@ const Employees = () => {
         </button>
       </div>
 
-      {/* Stats Cards */}
+      {}
       <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon" style={{ background: '#f1f5f9', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>👥</div>
@@ -223,7 +216,7 @@ const Employees = () => {
         </div>
       </div>
 
-      {/* Main Grid View */}
+      {}
       {loading ? (
         <div className="loading-screen" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '30vh', gap: '16px', color: '#64748b' }}>
           <div className="spinner" style={{ width: '40px', height: '40px', border: '3px solid #e2e8f0', borderTopColor: '#0f766e', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
@@ -276,7 +269,7 @@ const Employees = () => {
         </div>
       )}
 
-      {/* Add Employee Modal */}
+      {}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -293,7 +286,7 @@ const Employees = () => {
             <form onSubmit={handleAddEmployee}>
               <div className="form-group">
                 <label>Full Name *</label>
-                <input 
+                <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -305,7 +298,7 @@ const Employees = () => {
 
               <div className="form-group">
                 <label>Username *</label>
-                <input 
+                <input
                   type="text"
                   value={formData.username}
                   onChange={(e) => setFormData({ ...formData, username: e.target.value })}
@@ -317,7 +310,7 @@ const Employees = () => {
 
               <div className="form-group">
                 <label>Password *</label>
-                <input 
+                <input
                   type="password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}

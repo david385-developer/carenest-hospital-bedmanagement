@@ -19,7 +19,6 @@ const FollowUps = () => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
-  // Modal State
   const [showModal, setShowModal] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [status, setStatus] = useState('Stable');
@@ -58,7 +57,7 @@ const FollowUps = () => {
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     if (!selectedPatient) return;
-    
+
     setError('');
     setMessage('');
     setSubmitting(true);
@@ -70,12 +69,11 @@ const FollowUps = () => {
         notes,
         updated_by: user?.name || 'Dr Prachi'
       });
-      
+
       setMessage(`Follow-up status updated for ${selectedPatient.patientName}!`);
       setShowModal(false);
       fetchFollowups();
-      
-      // Trigger a window event or simple custom callback to notify the parent Dashboard to refresh badges
+
       const event = new CustomEvent('followup-updated');
       window.dispatchEvent(event);
     } catch (err) {
@@ -130,11 +128,11 @@ const FollowUps = () => {
               <tr key={patient.patientId}>
                 <td><strong>{patient.patientName}</strong></td>
                 <td>
-                  <span 
-                    className="status-badge" 
-                    style={{ 
-                      backgroundColor: `${statusColors[patient.status || 'Stable']}1a`, // 10% opacity
-                      color: statusColors[patient.status || 'Stable'] 
+                  <span
+                    className="status-badge"
+                    style={{
+                      backgroundColor: `${statusColors[patient.status || 'Stable']}1a`,
+                      color: statusColors[patient.status || 'Stable']
                     }}
                   >
                     {patient.status || 'Stable'}
@@ -144,8 +142,8 @@ const FollowUps = () => {
                 <td>{patient.updatedBy || '—'}</td>
                 <td className="notes-cell">{patient.notes || '—'}</td>
                 <td>
-                  <button 
-                    className="btn-update" 
+                  <button
+                    className="btn-update"
                     onClick={() => openUpdateModal(patient)}
                     type="button"
                   >
@@ -157,15 +155,15 @@ const FollowUps = () => {
           </tbody>
         </table>
 
-        {/* Mobile card layout */}
+        {}
         <div className="followups-cards">
           {followups.map(patient => (
             <div key={patient.patientId} className="followup-card">
               <div className="followup-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                 <h4 style={{ margin: 0, fontSize: '15px', fontWeight: '600', color: '#1d3557' }}>{patient.patientName}</h4>
-                <span 
+                <span
                   className="status-badge"
-                  style={{ 
+                  style={{
                     backgroundColor: `${statusColors[patient.status || 'Stable']}1a`,
                     color: statusColors[patient.status || 'Stable']
                   }}
@@ -180,8 +178,8 @@ const FollowUps = () => {
                 <span>Last Updated: {formatDateTimeIST(patient.updatedAt)}</span>
                 <span>By: {patient.updatedBy || '—'}</span>
               </div>
-              <button 
-                className="btn-update" 
+              <button
+                className="btn-update"
                 onClick={() => openUpdateModal(patient)}
                 style={{ width: '100%', padding: '8px' }}
                 type="button"
@@ -209,11 +207,11 @@ const FollowUps = () => {
             <form onSubmit={handleUpdateSubmit}>
               <div className="form-group" style={{ position: 'relative' }}>
                 <label>Status *</label>
-                
-                {/* Custom status selector dropdown with colored dots */}
+
+                {}
                 <div className="custom-dropdown-container">
-                  <div 
-                    className="dropdown-trigger" 
+                  <div
+                    className="dropdown-trigger"
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                     style={{
                       display: 'flex',
@@ -231,9 +229,9 @@ const FollowUps = () => {
                     {status}
                     <span style={{ marginLeft: 'auto', fontSize: '10px', color: '#64748b' }}>▼</span>
                   </div>
-                  
+
                   {dropdownOpen && (
-                    <div 
+                    <div
                       className="dropdown-options-menu"
                       style={{
                         position: 'absolute',
@@ -251,8 +249,8 @@ const FollowUps = () => {
                       }}
                     >
                       {Object.keys(statusColors).map(opt => (
-                        <div 
-                          key={opt} 
+                        <div
+                          key={opt}
                           className="dropdown-option-item"
                           onClick={() => { setStatus(opt); setDropdownOpen(false); }}
                           style={{

@@ -43,7 +43,6 @@
   border-color: #0f766e;
 }
 
-/* Legend */
 .bed-legend {
   display: flex;
   gap: 20px;
@@ -66,7 +65,6 @@
   border-radius: 50%;
 }
 
-/* Ward Section */
 .ward-section {
   margin-bottom: 28px;
 }
@@ -80,7 +78,6 @@
   border-bottom: 1px solid #e2e8f0;
 }
 
-/* Bed Grid */
 .bed-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -165,7 +162,6 @@
   background: #bbf7d0;
 }
 
-/* Modal */
 .modal-overlay {
   position: fixed;
   inset: 0;

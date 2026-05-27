@@ -1,7 +1,7 @@
 import React from 'react';
 
 const PatientCard = ({ patient, onViewHistory, userRole }) => {
-  // Generate QR code using qrserver API
+
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=PatientID:${patient.patientId}`;
 
   return (
@@ -11,7 +11,7 @@ const PatientCard = ({ patient, onViewHistory, userRole }) => {
           {patient.patientName.charAt(0).toUpperCase()}
         </div>
         <div className="patient-info">
-          <h4 
+          <h4
             style={{ cursor: 'pointer', color: '#457b9d', textDecoration: 'none' }}
             onMouseOver={(e) => e.target.style.textDecoration = 'underline'}
             onMouseOut={(e) => e.target.style.textDecoration = 'none'}
@@ -28,8 +28,8 @@ const PatientCard = ({ patient, onViewHistory, userRole }) => {
       </div>
 
       <div className="patient-qr-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '12px', padding: '8px', borderTop: '1px solid #f1f5f9' }}>
-        <img 
-          src={qrCodeUrl} 
+        <img
+          src={qrCodeUrl}
           alt={`Patient ${patient.patientId} QR ID`}
           style={{ width: '80px', height: '80px', borderRadius: '4px', background: '#f8fafc', padding: '4px', border: '1px solid #e2e8f0' }}
         />

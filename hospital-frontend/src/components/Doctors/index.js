@@ -164,11 +164,11 @@ const Doctors = () => {
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h3>Add New Doctor</h3>
             <p className="modal-subtitle">Register a new medical professional account</p>
-            
+
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label>Full Name *</label>
-                <input 
+                <input
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                   className={formErrors.name ? 'input-error' : ''}
@@ -178,7 +178,7 @@ const Doctors = () => {
               </div>
               <div className="form-group">
                 <label>Username *</label>
-                <input 
+                <input
                   value={formData.username}
                   onChange={(e) => setFormData({...formData, username: e.target.value})}
                   className={formErrors.username ? 'input-error' : ''}
@@ -188,7 +188,7 @@ const Doctors = () => {
               </div>
               <div className="form-group">
                 <label>Password *</label>
-                <input 
+                <input
                   type="password"
                   value={formData.password}
                   onChange={(e) => setFormData({...formData, password: e.target.value})}

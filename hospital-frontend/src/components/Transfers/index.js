@@ -128,12 +128,12 @@ const Transfers = () => {
       )}
 
       <div className="transfer-layout">
-        {/* Active Admissions List */}
+        {}
         <div className="card transfer-card">
           <h3 className="card-title">Active Admissions</h3>
           <div className="admission-list" style={{ maxHeight: '420px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {admissions.map(admission => (
-              <div 
+              <div
                 key={admission.admissionId}
                 className={`admission-select ${selectedAdmission?.admissionId === admission.admissionId ? 'selected' : ''}`}
                 onClick={() => {
@@ -173,10 +173,10 @@ const Transfers = () => {
           </div>
         </div>
 
-        {/* Transfer Form */}
+        {}
         <div className="card transfer-card">
           <h3 className="card-title">Transfer Details</h3>
-          
+
           {selectedAdmission ? (
             <form onSubmit={handleTransfer}>
               <div className="selected-patient" style={{ marginBottom: '20px' }}>
@@ -189,8 +189,8 @@ const Transfers = () => {
 
               <div className="form-group">
                 <label>Target Bed *</label>
-                <select 
-                  value={targetBedId} 
+                <select
+                  value={targetBedId}
                   onChange={(e) => {
                     setTargetBedId(e.target.value);
                     if (formErrors.targetBedId) setFormErrors({ ...formErrors, targetBedId: '' });
@@ -213,7 +213,7 @@ const Transfers = () => {
 
               <div className="form-group">
                 <label>Transfer Reason</label>
-                <textarea 
+                <textarea
                   value={transferReason}
                   onChange={(e) => setTransferReason(e.target.value)}
                   placeholder="Enter medical reason for transferring the patient..."

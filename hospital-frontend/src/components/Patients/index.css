@@ -30,7 +30,6 @@
   color: #94a3b8;
 }
 
-/* Patients Grid */
 .patients-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -113,7 +112,6 @@
   color: white;
 }
 
-/* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
@@ -175,7 +173,6 @@
   font-weight: 500;
 }
 
-/* History Modal */
 .history-modal {
   max-width: 520px;
 }

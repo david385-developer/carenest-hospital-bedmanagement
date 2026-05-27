@@ -16,7 +16,7 @@ const WardMap = ({ beds, onAssignClick, onStatusChange, userRole }) => {
   }, {});
 
   const handleBedClick = (bed) => {
-    // Only Reception and Admin can click to assign
+
     if (userRole === 'doctor') return;
     if (bed.status !== 'AVAILABLE') return;
     if (onAssignClick) onAssignClick(bed);
@@ -33,14 +33,14 @@ const WardMap = ({ beds, onAssignClick, onStatusChange, userRole }) => {
               const canClick = bed.status === 'AVAILABLE' && userRole !== 'doctor';
 
               return (
-                <div 
-                  key={bed.bedId} 
+                <div
+                  key={bed.bedId}
                   className={`bed-card ${bed.status.toLowerCase()} ${canClick ? 'clickable' : 'non-clickable'}`}
                   onClick={() => handleBedClick(bed)}
                   title={isOccupied && bed.patientName ? `Patient: ${bed.patientName}` : undefined}
                 >
-                  <div 
-                    className="bed-status-indicator" 
+                  <div
+                    className="bed-status-indicator"
                     style={{ background: STATUS_COLORS[bed.status] }}
                   ></div>
                   <span className="bed-number">{bed.bedNumber}</span>
@@ -49,16 +49,16 @@ const WardMap = ({ beds, onAssignClick, onStatusChange, userRole }) => {
                     <span className="bed-patient">{bed.patientName}</span>
                   )}
 
-                  {/* Tooltip on Hover for Occupied Bed */}
+                  {}
                   {isOccupied && bed.patientName && (
                     <div className="bed-tooltip-bubble">
                       <strong>Patient:</strong> {bed.patientName}
                     </div>
                   )}
-                  
-                  {/* Status Button Cleanups (Reception / Admin only) */}
+
+                  {}
                   {userRole !== 'doctor' && bed.status === 'CLEANING' && (
-                    <button 
+                    <button
                       className="status-btn available"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -69,7 +69,7 @@ const WardMap = ({ beds, onAssignClick, onStatusChange, userRole }) => {
                     </button>
                   )}
                   {userRole !== 'doctor' && bed.status === 'MAINTENANCE' && (
-                    <button 
+                    <button
                       className="status-btn available"
                       onClick={(e) => {
                         e.stopPropagation();

@@ -6,7 +6,7 @@ const PrivateRoute = ({ allowedRoles, children }) => {
   const { user, isAuthenticated } = useContext(AuthContext);
 
   if (!isAuthenticated || !user) {
-    // If not authenticated, App.js handles rendering the Login view
+
     return null;
   }
 

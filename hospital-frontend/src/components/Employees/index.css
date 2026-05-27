@@ -2,7 +2,6 @@
   animation: fadeIn 0.3s ease;
 }
 
-/* Page Header styling */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -17,7 +16,6 @@
   margin: 0;
 }
 
-/* Stats Cards Grid */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -50,7 +48,6 @@
   font-weight: 500;
 }
 
-/* Responsive Employees Grid */
 .employees-responsive-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -58,29 +55,27 @@
   margin-bottom: 24px;
 }
 
-/* Mobile (1 column by default, standard styles) */
 @media (min-width: 600px) {
-  /* Tablet (2 columns) */
+
   .employees-responsive-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (min-width: 900px) {
-  /* Desktop Small (3 columns) */
+
   .employees-responsive-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (min-width: 1200px) {
-  /* Desktop Wide (4 columns) */
+
   .employees-responsive-grid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
-/* Employee Card */
 .employee-card {
   background: white;
   border-radius: 14px;
@@ -95,7 +90,6 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* Badges */
 .badge-admin {
   background: #f3e8ff;
   color: #6b21a8;
@@ -111,7 +105,6 @@
   color: #c2410c;
 }
 
-/* Button Primary (Teal) */
 .btn-primary {
   background: #0f766e;
   color: white;
@@ -133,7 +126,6 @@
   cursor: not-allowed;
 }
 
-/* Button Secondary (Cancel) */
 .btn-secondary {
   background: #f1f5f9;
   color: #475569;
@@ -150,7 +142,6 @@
   background: #e2e8f0;
 }
 
-/* Modal Overlay styling */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -186,7 +177,6 @@
   margin: 0 0 20px 0;
 }
 
-/* Forms styling */
 .form-group {
   margin-bottom: 16px;
   text-align: left;
@@ -240,7 +230,6 @@
   margin-top: 24px;
 }
 
-/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

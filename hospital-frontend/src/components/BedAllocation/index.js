@@ -104,10 +104,10 @@ const BedAllocation = () => {
   };
 
   const handleAssignClick = (bed) => {
-    // Doctors cannot assign beds
+
     if (isDoctor()) return;
     if (bed.status !== 'AVAILABLE') return;
-    
+
     setSelectedBed(bed);
     setShowAssignModal(true);
     setFormErrors({});
@@ -143,7 +143,7 @@ const BedAllocation = () => {
   };
 
   const handleStatusChange = async (bedId, newStatus) => {
-    // Doctor cannot alter bed status
+
     if (isDoctor()) return;
 
     setError('');
@@ -185,8 +185,8 @@ const BedAllocation = () => {
       <div className="page-header">
         <h2>🛏️ Bed Allocation Dashboard</h2>
         <div className="filters">
-          <select 
-            value={filterWard} 
+          <select
+            value={filterWard}
             onChange={(e) => setFilterWard(e.target.value)}
             className="filter-select"
           >
@@ -195,8 +195,8 @@ const BedAllocation = () => {
               <option key={ward.wardId} value={ward.wardId}>{ward.wardName}</option>
             ))}
           </select>
-          <select 
-            value={filterStatus} 
+          <select
+            value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
             className="filter-select"
           >
@@ -231,10 +231,10 @@ const BedAllocation = () => {
           <p>No beds match the selected filters.</p>
         </div>
       ) : (
-        <WardMap 
-          beds={beds} 
-          onAssignClick={handleAssignClick} 
-          onStatusChange={handleStatusChange} 
+        <WardMap
+          beds={beds}
+          onAssignClick={handleAssignClick}
+          onStatusChange={handleStatusChange}
           userRole={user?.role}
         />
       )}
@@ -244,12 +244,12 @@ const BedAllocation = () => {
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h3>Assign Bed {selectedBed?.bedNumber}</h3>
             <p className="modal-subtitle">{selectedBed?.wardName} — {selectedBed?.wardType.toUpperCase()}</p>
-            
+
             <form onSubmit={handleAssignSubmit}>
               <div className="form-group">
                 <label>Patient *</label>
-                <select 
-                  value={assignForm.patientId} 
+                <select
+                  value={assignForm.patientId}
                   onChange={(e) => setAssignForm({ ...assignForm, patientId: e.target.value })}
                   className={formErrors.patientId ? 'input-error' : ''}
                 >
@@ -265,8 +265,8 @@ const BedAllocation = () => {
 
               <div className="form-group">
                 <label>Doctor *</label>
-                <select 
-                  value={assignForm.doctorId} 
+                <select
+                  value={assignForm.doctorId}
                   onChange={(e) => setAssignForm({ ...assignForm, doctorId: e.target.value })}
                   className={formErrors.doctorId ? 'input-error' : ''}
                 >
@@ -282,8 +282,8 @@ const BedAllocation = () => {
 
               <div className="form-group">
                 <label>Admission Type *</label>
-                <select 
-                  value={assignForm.admissionType} 
+                <select
+                  value={assignForm.admissionType}
                   onChange={(e) => setAssignForm({ ...assignForm, admissionType: e.target.value })}
                 >
                   <option value="NORMAL">Normal</option>
@@ -294,8 +294,8 @@ const BedAllocation = () => {
 
               <div className="form-group">
                 <label>Diagnosis</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={assignForm.diagnosis}
                   onChange={(e) => setAssignForm({ ...assignForm, diagnosis: e.target.value })}
                   placeholder="Initial diagnosis"
@@ -304,7 +304,7 @@ const BedAllocation = () => {
 
               <div className="form-group">
                 <label>Notes</label>
-                <textarea 
+                <textarea
                   value={assignForm.notes}
                   onChange={(e) => setAssignForm({ ...assignForm, notes: e.target.value })}
                   placeholder="Additional notes"

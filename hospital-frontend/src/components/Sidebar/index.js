@@ -2,10 +2,10 @@ import React from 'react';
 import { useAuth } from '../AuthContext';
 import './index.css';
 
-const Sidebar = ({ 
-  activePage, 
-  onPageChange, 
-  collapsed, 
+const Sidebar = ({
+  activePage,
+  onPageChange,
+  collapsed,
   setCollapsed,
   criticalFollowupsCount = 0,
   pendingRoundsCount = 0
@@ -19,19 +19,19 @@ const Sidebar = ({
     { id: 'emergency', label: 'Emergency Ward', icon: '🚨', roles: ['reception', 'doctor', 'admin'], badge: { count: 3, type: 'emergency' } },
     { id: 'admissions', label: 'Admissions', icon: '📋', roles: ['reception', 'doctor', 'admin'], badge: { count: 5, type: 'info' } },
     { id: 'patients', label: 'Patients', icon: '👤', roles: ['reception', 'doctor', 'admin'] },
-    { 
-      id: 'followups', 
-      label: 'Follow-ups', 
-      icon: '📋', 
-      roles: ['doctor'], 
-      badge: criticalFollowupsCount > 0 ? { count: criticalFollowupsCount, type: 'emergency' } : null 
+    {
+      id: 'followups',
+      label: 'Follow-ups',
+      icon: '📋',
+      roles: ['doctor'],
+      badge: criticalFollowupsCount > 0 ? { count: criticalFollowupsCount, type: 'emergency' } : null
     },
-    { 
-      id: 'rounds', 
-      label: 'Consultation Rounds', 
-      icon: '🩺', 
-      roles: ['doctor'], 
-      badge: pendingRoundsCount > 0 ? { count: pendingRoundsCount, type: 'warning' } : null 
+    {
+      id: 'rounds',
+      label: 'Consultation Rounds',
+      icon: '🩺',
+      roles: ['doctor'],
+      badge: pendingRoundsCount > 0 ? { count: pendingRoundsCount, type: 'warning' } : null
     },
     { id: 'transfers', label: 'Transfers', icon: '🔄', roles: ['doctor', 'admin'], badge: { count: 2, type: 'warning' } },
     { id: 'employees', label: 'Employees', icon: '👥', roles: ['admin'] },
@@ -43,14 +43,14 @@ const Sidebar = ({
 
   return (
     <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
-      <button 
+      <button
         className="collapse-btn"
         onClick={() => setCollapsed(!collapsed)}
         type="button"
       >
         {collapsed ? '→' : '←'}
       </button>
-      
+
       <div className="sidebar-menu">
         {visibleItems.map(item => (
           <button

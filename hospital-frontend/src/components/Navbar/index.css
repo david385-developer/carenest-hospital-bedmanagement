@@ -126,7 +126,6 @@
   }
 }
 
-/* Mobile overrides (≤667px) */
 @media screen and (max-width: 667px) {
   .navbar {
     height: 56px;
@@ -136,10 +135,10 @@
     flex-shrink: 0;
   }
   .navbar-brand-text {
-    display: none !important; /* Disappear on responsive devices */
+    display: none !important;
   }
   .nav-icon {
-    display: none !important; /* Disappear on responsive devices */
+    display: none !important;
   }
   .navbar-profile {
     min-width: 0;

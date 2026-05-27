@@ -153,13 +153,13 @@
     height: calc(100vh - 64px);
     box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
   }
-  
+
   .sidebar.collapsed {
     width: 0;
     border-right: none;
     overflow: hidden;
   }
-  
+
   .collapse-btn {
     display: none;
   }

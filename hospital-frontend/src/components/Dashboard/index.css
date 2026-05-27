@@ -28,7 +28,6 @@ body {
   height: calc(100vh - 64px);
 }
 
-/* Loading Screen */
 .loading-screen {
   display: flex;
   flex-direction: column;
@@ -52,7 +51,6 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* Stats Grid */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -108,7 +106,6 @@ body {
   font-weight: 500;
 }
 
-/* Cards */
 .card {
   background: white;
   border-radius: 12px;
@@ -128,7 +125,6 @@ body {
   gap: 8px;
 }
 
-/* Dashboard Row */
 .dashboard-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -144,7 +140,6 @@ body {
   }
 }
 
-/* Occupancy Circle */
 .occupancy-display {
   display: flex;
   justify-content: center;
@@ -199,7 +194,6 @@ body {
   font-weight: 500;
 }
 
-/* Notifications */
 .notification-list {
   display: flex;
   flex-direction: column;
@@ -267,7 +261,6 @@ body {
   margin-top: 2px;
 }
 
-/* Ward Breakdown */
 .ward-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -354,7 +347,6 @@ body {
   font-weight: 500;
 }
 
-/* Emergency Table */
 .emergency-table {
   overflow-x: auto;
 }
@@ -403,7 +395,6 @@ body {
   font-size: 14px;
 }
 
-/* Scrollbar */
 .main-content::-webkit-scrollbar {
   width: 8px;
 }
@@ -421,7 +412,6 @@ body {
   background: #94a3b8;
 }
 
-/* Doctor Stats Grid Default */
 .doctor-stats-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -429,7 +419,6 @@ body {
   margin-bottom: 24px;
 }
 
-/* Doctor Stat Card Default Style */
 .doctor-stat-card {
   background: white;
   border-radius: 12px;
@@ -462,7 +451,6 @@ body {
   font-weight: 500;
 }
 
-/* Quick Actions Row & Buttons Default */
 .quick-actions-row {
   display: flex;
   flex-wrap: wrap;
@@ -537,9 +525,8 @@ body {
   box-shadow: 0 4px 10px rgba(230, 57, 70, 0.2);
 }
 
-/* Mobile Breakpoint overrides (≤667px width) */
 @media screen and (max-width: 667px) {
-  /* Navbar adjustments */
+
   .navbar {
     height: 56px !important;
     padding: 0 12px !important;
@@ -570,8 +557,6 @@ body {
     flex-shrink: 0;
   }
 
-
-  /* Admin Dashboard Stats Grid adjustments */
   .stats-grid {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 12px !important;
@@ -587,7 +572,6 @@ body {
     font-size: 11px !important;
   }
 
-  /* Doctor Dashboard Stats Grid adjustments */
   .doctor-stats-grid {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 12px !important;
@@ -605,7 +589,6 @@ body {
     font-size: 11px !important;
   }
 
-  /* Quick Actions adjustments */
   .quick-actions-row {
     flex-direction: column !important;
     gap: 8px !important;
@@ -614,13 +597,11 @@ body {
     width: 100% !important;
   }
 
-  /* ICU Status Card adjustments */
   .icu-alert-card {
     padding: 16px !important;
     border-radius: 8px !important;
   }
 
-  /* Recent Activity adjustments */
   .activity-card {
     max-height: 300px;
     position: relative;
@@ -650,7 +631,6 @@ body {
     font-size: 11px !important;
   }
 
-  /* Design Consistency Rule Overrides for mobile cards */
   .card {
     border-radius: 8px !important;
     padding: 16px !important;
@@ -659,7 +639,6 @@ body {
   }
 }
 
-/* Extra small mobile screen breakpoint */
 @media screen and (max-width: 375px) {
   .stats-grid {
     grid-template-columns: 1fr !important;

@@ -10,7 +10,7 @@ const Navbar = ({ sidebarCollapsed, setSidebarCollapsed }) => {
   return (
     <nav className="navbar">
       <div className="nav-brand navbar-logo">
-        <button 
+        <button
           className="sidebar-toggle-btn"
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
           title="Toggle Sidebar"

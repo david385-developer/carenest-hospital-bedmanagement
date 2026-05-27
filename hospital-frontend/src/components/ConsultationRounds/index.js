@@ -5,26 +5,23 @@ import './index.css';
 
 const ConsultationRounds = () => {
   const { user } = useAuth();
-  const [view, setView] = useState('today'); // 'today' | 'history'
+  const [view, setView] = useState('today');
   const [rounds, setRounds] = useState([]);
   const [historyRounds, setHistoryRounds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
-  // Calendar filter default to current YYYY-MM
   const [monthFilter, setMonthFilter] = useState(() => {
     const d = new Date();
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     return `${d.getFullYear()}-${mm}`;
   });
 
-  // Quick Round Modal State
   const [showQuickRoundModal, setShowQuickRoundModal] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState(null);
   const [selectedPatientName, setSelectedPatientName] = useState('');
-  
-  // Vitals & Findings Form State
+
   const [vitalsBp, setVitalsBp] = useState('120/80');
   const [vitalsTemp, setVitalsTemp] = useState('');
   const [vitalsPulse, setVitalsPulse] = useState('');
@@ -34,7 +31,6 @@ const ConsultationRounds = () => {
   const [nextRound, setNextRound] = useState('');
   const [submittingRound, setSubmittingRound] = useState(false);
 
-  // Expander for vitals in history cards
   const [expandedRoundId, setExpandedRoundId] = useState(null);
 
   useEffect(() => {
@@ -65,10 +61,10 @@ const ConsultationRounds = () => {
     setError('');
     try {
       const data = await api.get('/api/rounds');
-      // Filter rounds by month (e.g. date starts with Selected Month)
+
       const filtered = (data || []).filter(r => {
         if (!r.created_at) return false;
-        // r.created_at starts with YYYY-MM
+
         return r.created_at.startsWith(monthFilter);
       });
       setHistoryRounds(filtered);
@@ -83,17 +79,15 @@ const ConsultationRounds = () => {
   const openQuickRoundModal = (patient) => {
     setSelectedPatientId(patient.patient_id);
     setSelectedPatientName(patient.patientName);
-    
-    // Auto-populate from previous values if available
+
     setVitalsBp(patient.vitals_bp || '120/80');
     setVitalsTemp(patient.vitals_temp !== null && patient.vitals_temp !== undefined ? String(patient.vitals_temp) : '');
     setVitalsPulse(patient.vitals_pulse !== null && patient.vitals_pulse !== undefined ? String(patient.vitals_pulse) : '');
     setVitalsSpo2(patient.vitals_spo2 !== null && patient.vitals_spo2 !== undefined ? String(patient.vitals_spo2) : '');
-    
+
     setFindings('');
     setTreatmentPlan('');
-    
-    // Default next_round to tomorrow at current hour
+
     const d = new Date();
     d.setDate(d.getDate() + 1);
     const yyyy = d.getFullYear();
@@ -116,7 +110,7 @@ const ConsultationRounds = () => {
     setSubmittingRound(true);
 
     try {
-      // Re-format next_round local date string 'YYYY-MM-DDTHH:MM' to SQL format 'YYYY-MM-DD HH:MM'
+
       const formattedNextRound = nextRound ? nextRound.replace('T', ' ') : null;
 
       await api.post('/api/rounds', {
@@ -133,15 +127,13 @@ const ConsultationRounds = () => {
 
       setMessage(`Consultation round logged for ${selectedPatientName}!`);
       setShowQuickRoundModal(false);
-      
-      // Refresh list
+
       if (view === 'today') {
         fetchTodayRounds();
       } else {
         fetchHistoryRounds();
       }
 
-      // Trigger sidebar badge counts reload
       window.dispatchEvent(new CustomEvent('followup-updated'));
     } catch (err) {
       setError(err.message || 'Failed to save round details.');
@@ -199,7 +191,7 @@ const ConsultationRounds = () => {
 
       <div className="page-header-tabs" style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #e2e8f0', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
         <div className="tabs-navigation" style={{ display: 'flex', gap: '8px' }}>
-          <button 
+          <button
             className={`tab-btn ${view === 'today' ? 'active' : ''}`}
             onClick={() => setView('today')}
             style={{
@@ -216,7 +208,7 @@ const ConsultationRounds = () => {
           >
             📋 Today's Rounds
           </button>
-          <button 
+          <button
             className={`tab-btn ${view === 'history' ? 'active' : ''}`}
             onClick={() => setView('history')}
             style={{
@@ -238,8 +230,8 @@ const ConsultationRounds = () => {
         {view === 'history' && (
           <div className="filter-area" style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingBottom: '6px' }}>
             <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>Select Month:</span>
-            <input 
-              type="month" 
+            <input
+              type="month"
               value={monthFilter}
               onChange={(e) => setMonthFilter(e.target.value)}
               style={{
@@ -284,17 +276,17 @@ const ConsultationRounds = () => {
 
                 {round.status === 'Pending' && (
                   <div className="card-actions" style={{ display: 'flex', gap: '8px', borderTop: '1px solid #f1f5f9', paddingTop: '12px', marginTop: 'auto' }}>
-                    <button 
+                    <button
                       onClick={() => openQuickRoundModal(round)}
-                      className="btn-primary" 
+                      className="btn-primary"
                       style={{ flex: 1, backgroundColor: '#2d6a4f', padding: '8px' }}
                       type="button"
                     >
                       Quick Round
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleReschedule(round.id)}
-                      className="btn-secondary" 
+                      className="btn-secondary"
                       style={{ flex: 1, padding: '8px' }}
                       type="button"
                     >
@@ -356,7 +348,7 @@ const ConsultationRounds = () => {
               </tbody>
             </table>
 
-            {/* Mobile Cards for History */}
+            {}
             <div className="rounds-cards">
               {historyRounds.map(round => (
                 <div key={round.id} className="round-card" style={{ borderBottom: '1px solid #e2e8f0', padding: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -364,7 +356,7 @@ const ConsultationRounds = () => {
                     <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#1d3557' }}>{round.patientName}</h4>
                     <span style={{ fontSize: '11px', color: '#94a3b8' }}>{formatDateTimeIST(round.created_at)}</span>
                   </div>
-                  
+
                   <div style={{ fontSize: '13px', color: '#475569', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                     <div><strong>Findings:</strong> {round.findings}</div>
                     {round.next_round && <div><strong>Next Scheduled:</strong> {formatDateTimeIST(round.next_round)}</div>}
@@ -378,7 +370,7 @@ const ConsultationRounds = () => {
 
                   {(round.vitals_bp || round.vitals_temp || round.vitals_pulse || round.vitals_spo2) && (
                     <div>
-                      <button 
+                      <button
                         onClick={() => setExpandedRoundId(expandedRoundId === round.id ? null : round.id)}
                         style={{ background: 'none', border: 'none', color: '#457b9d', fontSize: '11px', cursor: 'pointer', fontWeight: '600', padding: 0 }}
                         type="button"
@@ -410,7 +402,7 @@ const ConsultationRounds = () => {
         </div>
       )}
 
-      {/* Quick Round Form Modal */}
+      {}
       {showQuickRoundModal && (
         <div className="modal-overlay" onClick={() => setShowQuickRoundModal(false)}>
           <div className="modal quick-round-modal" onClick={(e) => e.stopPropagation()}>
@@ -418,7 +410,7 @@ const ConsultationRounds = () => {
             <p className="modal-subtitle">Logged-in Doctor: <strong>{user?.name || 'Dr Prachi'}</strong> • Patient: <strong>{selectedPatientName}</strong></p>
 
             <form onSubmit={handleQuickRoundSubmit}>
-              {/* Vitals Section - 2 columns on desktop, stacked on mobile */}
+              {}
               <div className="vitals-grid">
                 <div className="form-group">
                   <label>BP (Blood Pressure)</label>
@@ -433,8 +425,8 @@ const ConsultationRounds = () => {
                 <div className="form-group">
                   <label>Temperature</label>
                   <div style={{ display: 'flex', borderRadius: '8px', border: '1px solid #cbd5e1', overflow: 'hidden', background: '#f8fafc' }}>
-                    <input 
-                      type="number" 
+                    <input
+                      type="number"
                       step="0.1"
                       value={vitalsTemp}
                       onChange={(e) => setVitalsTemp(e.target.value)}
@@ -448,8 +440,8 @@ const ConsultationRounds = () => {
                 <div className="form-group">
                   <label>Pulse Rate</label>
                   <div style={{ display: 'flex', borderRadius: '8px', border: '1px solid #cbd5e1', overflow: 'hidden', background: '#f8fafc' }}>
-                    <input 
-                      type="number" 
+                    <input
+                      type="number"
                       value={vitalsPulse}
                       onChange={(e) => setVitalsPulse(e.target.value)}
                       placeholder="72"
@@ -462,8 +454,8 @@ const ConsultationRounds = () => {
                 <div className="form-group">
                   <label>SpO2 (Oxygen Saturation)</label>
                   <div style={{ display: 'flex', borderRadius: '8px', border: '1px solid #cbd5e1', overflow: 'hidden', background: '#f8fafc' }}>
-                    <input 
-                      type="number" 
+                    <input
+                      type="number"
                       value={vitalsSpo2}
                       onChange={(e) => setVitalsSpo2(e.target.value)}
                       placeholder="98"

@@ -12,7 +12,6 @@ const Admissions = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
-  // Discharge Modal State
   const [showDischargeModal, setShowDischargeModal] = useState(false);
   const [selectedAdmissionId, setSelectedAdmissionId] = useState(null);
   const [dischargeForm, setDischargeForm] = useState({
@@ -125,8 +124,8 @@ const Admissions = () => {
 
       <div className="page-header">
         <h2>📝 Admissions</h2>
-        <select 
-          value={filterStatus} 
+        <select
+          value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
           className="filter-select"
         >
@@ -182,7 +181,7 @@ const Admissions = () => {
                 </td>
                 <td>
                   {admission.admissionStatus === 'ACTIVE' && canDischarge && (
-                    <button 
+                    <button
                       className="discharge-btn"
                       onClick={() => openDischargeModal(admission.admissionId)}
                       type="button"
@@ -207,7 +206,7 @@ const Admissions = () => {
                 <h3>{admission.patientName}</h3>
                 <div className="patient-subtitle">{admission.age} / {admission.gender}</div>
               </div>
-              
+
               <div className="card-details-grid">
                 <div><strong>Bed:</strong> <span className="bed-badge">{admission.bedNumber}</span></div>
                 <div><strong>Ward:</strong> {admission.wardName}</div>
@@ -233,10 +232,10 @@ const Admissions = () => {
                   )}
                 </div>
               </div>
-              
+
               <div className="card-actions">
                 {admission.admissionStatus === 'ACTIVE' && canDischarge && (
-                  <button 
+                  <button
                     className="discharge-btn"
                     onClick={() => openDischargeModal(admission.admissionId)}
                     type="button"

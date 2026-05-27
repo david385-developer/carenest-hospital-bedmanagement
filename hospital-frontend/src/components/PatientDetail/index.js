@@ -14,7 +14,7 @@ const statusColors = {
 
 const PatientDetail = ({ patientId, onBack }) => {
   const { user } = useAuth();
-  
+
   const [patient, setPatient] = useState(null);
   const [diagnoses, setDiagnoses] = useState([]);
   const [rounds, setRounds] = useState([]);
@@ -23,7 +23,6 @@ const PatientDetail = ({ patientId, onBack }) => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
-  // Diagnosis Modal Form State
   const [showDiagModal, setShowDiagModal] = useState(false);
   const [primaryDiag, setPrimaryDiag] = useState('');
   const [secondaryCond, setSecondaryCond] = useState('');
@@ -33,21 +32,18 @@ const PatientDetail = ({ patientId, onBack }) => {
   const [diagNotes, setDiagNotes] = useState('');
   const [diagSubmitting, setDiagSubmitting] = useState(false);
 
-  // Follow-up Modal Form State
   const [showFollowupModal, setShowFollowupModal] = useState(false);
   const [followupStatus, setFollowupStatus] = useState('Stable');
   const [followupNotes, setFollowupNotes] = useState('');
   const [followupSubmitting, setFollowupSubmitting] = useState(false);
   const [followupDropdownOpen, setFollowupDropdownOpen] = useState(false);
 
-  // Discharge Modal Form State
   const [showDischargeModal, setShowDischargeModal] = useState(false);
   const [dischargeType, setDischargeType] = useState('NORMAL');
   const [finalDiagnosis, setFinalDiagnosis] = useState('');
   const [dischargeNotes, setDischargeNotes] = useState('');
   const [dischargeSubmitting, setDischargeSubmitting] = useState(false);
 
-  // Collapsed sections states
   const [historyCollapsed, setHistoryCollapsed] = useState(true);
   const [expandedRoundId, setExpandedRoundId] = useState(null);
 
@@ -62,19 +58,16 @@ const PatientDetail = ({ patientId, onBack }) => {
     setLoading(true);
     setError('');
     try {
-      // Load patient detail
+
       const detail = await api.get(`/api/patients/${patientId}/detail`);
       setPatient(detail);
 
-      // Load diagnoses
       const diagData = await api.get(`/api/diagnosis/${patientId}`);
       setDiagnoses(diagData || []);
 
-      // Load rounds history
       const roundsData = await api.get(`/api/rounds/patient/${patientId}`);
       setRounds(roundsData || []);
 
-      // Load followups history
       const followData = await api.get(`/api/followups/${patientId}`);
       setFollowups(followData || []);
 
@@ -86,7 +79,6 @@ const PatientDetail = ({ patientId, onBack }) => {
     }
   };
 
-  // Symptoms tag input handlers
   const handleSymptomInputChange = (e) => {
     const value = e.target.value;
     if (value.includes(',')) {
@@ -95,7 +87,7 @@ const PatientDetail = ({ patientId, onBack }) => {
         .slice(0, -1)
         .map(s => s.trim())
         .filter(s => s.length > 0 && !symptomsList.includes(s));
-      
+
       if (symptomsList.length + newSymptoms.length <= 10) {
         setSymptomsList([...symptomsList, ...newSymptoms]);
       }
@@ -120,7 +112,6 @@ const PatientDetail = ({ patientId, onBack }) => {
     setSymptomsList(symptomsList.filter((_, idx) => idx !== indexToRemove));
   };
 
-  // Save Diagnosis
   const handleDiagSubmit = async (e) => {
     e.preventDefault();
     if (!primaryDiag.trim()) return;
@@ -141,16 +132,14 @@ const PatientDetail = ({ patientId, onBack }) => {
       });
       setMessage('Diagnosis saved successfully!');
       setShowDiagModal(false);
-      
-      // Reset form
+
       setPrimaryDiag('');
       setSecondaryCond('');
       setSymptomsList([]);
       setSymptomInput('');
       setIcd10Code('');
       setDiagNotes('');
-      
-      // Reload
+
       loadAllData();
     } catch (err) {
       setError(err.message || 'Failed to save diagnosis.');
@@ -159,7 +148,6 @@ const PatientDetail = ({ patientId, onBack }) => {
     }
   };
 
-  // Save Follow-up
   const handleFollowupSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -177,8 +165,7 @@ const PatientDetail = ({ patientId, onBack }) => {
       setShowFollowupModal(false);
       setFollowupNotes('');
       loadAllData();
-      
-      // Trigger a window event to notify sidebar count updates
+
       window.dispatchEvent(new CustomEvent('followup-updated'));
     } catch (err) {
       setError(err.message || 'Failed to update follow-up.');
@@ -187,7 +174,6 @@ const PatientDetail = ({ patientId, onBack }) => {
     }
   };
 
-  // Save Discharge
   const handleDischargeSubmit = async (e) => {
     e.preventDefault();
     if (!finalDiagnosis.trim()) return;
@@ -248,7 +234,7 @@ const PatientDetail = ({ patientId, onBack }) => {
 
       {patient && (
         <div className="patient-detail-grid">
-          {/* 1. Patient Info Card */}
+          {}
           <div className="card info-card" style={{ borderLeft: '4px solid #1d3557' }}>
             <div className="info-header" style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
               <div className="avatar" style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#0f766e', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', fontWeight: 'bold' }}>
@@ -276,7 +262,7 @@ const PatientDetail = ({ patientId, onBack }) => {
             </div>
           </div>
 
-          {/* 2. Current Diagnosis */}
+          {}
           <div className="card diagnosis-card" style={{ borderLeft: '4px solid #457b9d' }}>
             <h3 className="card-title">🩺 Current Diagnosis</h3>
             {currentDiag ? (
@@ -284,7 +270,7 @@ const PatientDetail = ({ patientId, onBack }) => {
                 <div><strong>Primary Diagnosis:</strong> <span style={{ fontSize: '15px', color: '#1d3557', fontWeight: '600' }}>{currentDiag.primary_diagnosis}</span></div>
                 {currentDiag.secondary_conditions && <div><strong>Secondary Conditions:</strong> {currentDiag.secondary_conditions}</div>}
                 {currentDiag.icd10_code && <div><strong>ICD-10 Code:</strong> <span className="bed-badge" style={{ background: '#f1f5f9', color: '#475569' }}>{currentDiag.icd10_code}</span></div>}
-                
+
                 {currentDiag.symptoms && (
                   <div style={{ marginTop: '4px' }}>
                     <strong>Symptoms:</strong>
@@ -297,7 +283,7 @@ const PatientDetail = ({ patientId, onBack }) => {
                     </div>
                   </div>
                 )}
-                
+
                 {currentDiag.notes && <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '8px', marginTop: '4px', borderLeft: '3px solid #cbd5e1' }}><strong>Notes:</strong> {currentDiag.notes}</div>}
                 <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '8px' }}>Diagnosed by {currentDiag.diagnosed_by} on {formatDateTimeIST(currentDiag.created_at)}</div>
               </div>
@@ -306,7 +292,7 @@ const PatientDetail = ({ patientId, onBack }) => {
             )}
           </div>
 
-          {/* 3. Follow-up Status */}
+          {}
           <div className="card followup-card" style={{ borderLeft: '4px solid #2d6a4f' }}>
             <h3 className="card-title">📋 Follow-up Status</h3>
             {latestFollowup ? (
@@ -325,18 +311,18 @@ const PatientDetail = ({ patientId, onBack }) => {
             )}
           </div>
 
-          {/* 4. Diagnosis History */}
+          {}
           {historyDiags.length > 0 && (
             <div className="card history-card" style={{ paddingBottom: '16px' }}>
-              <div 
-                className="section-collapsible-header" 
+              <div
+                className="section-collapsible-header"
                 onClick={() => setHistoryCollapsed(!historyCollapsed)}
                 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
               >
                 <h3 className="card-title" style={{ margin: 0 }}>📜 Diagnosis History ({historyDiags.length})</h3>
                 <span style={{ fontSize: '12px', color: '#0f766e', fontWeight: 'bold' }}>{historyCollapsed ? 'Show History ▼' : 'Hide History ▲'}</span>
               </div>
-              
+
               {!historyCollapsed && (
                 <div className="collapsible-content" style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '250px', overflowY: 'auto', paddingRight: '4px' }}>
                   {historyDiags.map(diag => (
@@ -354,7 +340,7 @@ const PatientDetail = ({ patientId, onBack }) => {
             </div>
           )}
 
-          {/* 5. Consultation Rounds History */}
+          {}
           <div className="card rounds-card">
             <h3 className="card-title">🩺 Consultation Rounds History ({rounds.length})</h3>
             {rounds.length === 0 ? (
@@ -373,10 +359,10 @@ const PatientDetail = ({ patientId, onBack }) => {
                     <p style={{ margin: '0 0 6px 0', fontSize: '13px', color: '#1d3557' }}><strong>Findings:</strong> {round.findings}</p>
                     {round.treatment_plan && <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#475569' }}><strong>Treatment Plan:</strong> {round.treatment_plan}</p>}
 
-                    {/* Vitals expander */}
+                    {}
                     {(round.vitals_bp || round.vitals_temp || round.vitals_pulse || round.vitals_spo2) && (
                       <div>
-                        <button 
+                        <button
                           className="expander-trigger"
                           onClick={() => setExpandedRoundId(expandedRoundId === round.id ? null : round.id)}
                           style={{ background: 'none', border: 'none', color: '#457b9d', fontSize: '11px', cursor: 'pointer', fontWeight: '600', padding: 0 }}
@@ -384,7 +370,7 @@ const PatientDetail = ({ patientId, onBack }) => {
                         >
                           {expandedRoundId === round.id ? 'Hide Vitals ▲' : 'Show Vitals ▼'}
                         </button>
-                        
+
                         {expandedRoundId === round.id && (
                           <div className="vitals-row-expand" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', background: '#f8fafc', padding: '8px 12px', borderRadius: '6px', marginTop: '6px', fontSize: '11px', border: '1px solid #f1f5f9' }}>
                             {round.vitals_bp && <div><strong>BP:</strong> {round.vitals_bp}</div>}
@@ -401,11 +387,11 @@ const PatientDetail = ({ patientId, onBack }) => {
             )}
           </div>
 
-          {/* 6. Action Buttons */}
+          {}
           <div className="card actions-card" style={{ gridColumn: '1 / -1', background: '#f8fafc', border: '1px dashed #cbd5e1' }}>
             <h3 style={{ fontSize: '14px', fontWeight: '600', color: '#475569', margin: '0 0 16px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Clinical Actions Portal</h3>
             <div className="actions-flex" style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-              <button 
+              <button
                 onClick={() => {
                   setSymptomsList([]);
                   setPrimaryDiag('');
@@ -414,21 +400,21 @@ const PatientDetail = ({ patientId, onBack }) => {
                   setDiagNotes('');
                   setSymptomInput('');
                   setShowDiagModal(true);
-                }} 
-                className="btn-primary" 
+                }}
+                className="btn-primary"
                 style={{ backgroundColor: '#457b9d' }}
                 type="button"
               >
                 Add Diagnosis
               </button>
-              
-              <button 
+
+              <button
                 onClick={() => {
                   setFollowupStatus(latestFollowup?.status || 'Stable');
                   setFollowupNotes('');
                   setShowFollowupModal(true);
-                }} 
-                className="btn-primary" 
+                }}
+                className="btn-primary"
                 style={{ backgroundColor: '#2d6a4f' }}
                 type="button"
               >
@@ -437,22 +423,22 @@ const PatientDetail = ({ patientId, onBack }) => {
 
               {patient.bed_number && (
                 <>
-                  <button 
+                  <button
                     onClick={() => {
                       setFinalDiagnosis(currentDiag?.primary_diagnosis || '');
                       setDischargeNotes('');
                       setDischargeType('NORMAL');
                       setShowDischargeModal(true);
-                    }} 
-                    className="btn-secondary" 
+                    }}
+                    className="btn-secondary"
                     style={{ color: '#dc2626', borderColor: '#fecaca', background: '#fef2f2' }}
                     type="button"
                   >
                     Discharge Patient
                   </button>
 
-                  <button 
-                    onClick={() => { window.location.hash = '#/transfers'; }} 
+                  <button
+                    onClick={() => { window.location.hash = '#/transfers'; }}
                     className="btn-secondary"
                     type="button"
                   >
@@ -465,7 +451,7 @@ const PatientDetail = ({ patientId, onBack }) => {
         </div>
       )}
 
-      {/* Diagnosis Modal */}
+      {}
       {showDiagModal && (
         <div className="modal-overlay" onClick={() => setShowDiagModal(false)}>
           <div className="modal diagnosis-form-modal" onClick={(e) => e.stopPropagation()}>
@@ -504,14 +490,14 @@ const PatientDetail = ({ patientId, onBack }) => {
                   placeholder="fever, cough, chest pain"
                   disabled={symptomsList.length >= 10}
                 />
-                
-                {/* Removable symptoms pills */}
+
+                {}
                 {symptomsList.length > 0 && (
                   <div className="symptoms-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}>
                     {symptomsList.map((sym, idx) => (
-                      <span 
-                        key={idx} 
-                        className="symptom-pill" 
+                      <span
+                        key={idx}
+                        className="symptom-pill"
                         onClick={() => removeSymptom(idx)}
                         style={{
                           background: '#e2e8f0',
@@ -578,7 +564,7 @@ const PatientDetail = ({ patientId, onBack }) => {
         </div>
       )}
 
-      {/* Follow-up Modal */}
+      {}
       {showFollowupModal && (
         <div className="modal-overlay" onClick={() => setShowFollowupModal(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -588,10 +574,10 @@ const PatientDetail = ({ patientId, onBack }) => {
             <form onSubmit={handleFollowupSubmit}>
               <div className="form-group" style={{ position: 'relative' }}>
                 <label>Status *</label>
-                
+
                 <div className="custom-dropdown-container">
-                  <div 
-                    className="dropdown-trigger" 
+                  <div
+                    className="dropdown-trigger"
                     onClick={() => setFollowupDropdownOpen(!followupDropdownOpen)}
                     style={{
                       display: 'flex',
@@ -609,9 +595,9 @@ const PatientDetail = ({ patientId, onBack }) => {
                     {followupStatus}
                     <span style={{ marginLeft: 'auto', fontSize: '10px', color: '#64748b' }}>▼</span>
                   </div>
-                  
+
                   {followupDropdownOpen && (
-                    <div 
+                    <div
                       className="dropdown-options-menu"
                       style={{
                         position: 'absolute',
@@ -629,8 +615,8 @@ const PatientDetail = ({ patientId, onBack }) => {
                       }}
                     >
                       {Object.keys(statusColors).map(opt => (
-                        <div 
-                          key={opt} 
+                        <div
+                          key={opt}
                           className="dropdown-option-item"
                           onClick={() => { setFollowupStatus(opt); setFollowupDropdownOpen(false); }}
                           style={{
@@ -690,7 +676,7 @@ const PatientDetail = ({ patientId, onBack }) => {
         </div>
       )}
 
-      {/* Discharge Modal */}
+      {}
       {showDischargeModal && (
         <div className="modal-overlay" onClick={() => setShowDischargeModal(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>

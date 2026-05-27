@@ -10,22 +10,20 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-
 const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'hospital-secret-key';
 const DB_PATH = path.join(__dirname, 'hospital.db');
 
 let db = null;
 
-// ==================== AUTH MIDDLEWARE ====================
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    
+
     if (!token) {
         return res.status(401).json({ error: 'Access denied. No token provided.' });
     }
-    
+
     jwt.verify(token, JWT_SECRET, (err, user) => {
         if (err) return res.status(403).json({ error: 'Invalid or expired token.' });
         req.user = user;
@@ -42,7 +40,6 @@ const requireRole = (roles) => {
     };
 };
 
-// ==================== DB INITIALIZATION ====================
 const initializeServerAndDB = async () => {
     try {
         db = await open({
@@ -50,10 +47,8 @@ const initializeServerAndDB = async () => {
             driver: sqlite3.Database
         });
 
-        // Enable foreign keys
         await db.exec('PRAGMA foreign_keys = ON');
 
-        // Create all tables
         await db.exec(`
             CREATE TABLE IF NOT EXISTS users (
                 user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -184,7 +179,6 @@ const initializeServerAndDB = async () => {
             );
         `);
 
-        // Seed default admin
         await seedDefaultData();
 
         app.listen(PORT, () => {
@@ -199,7 +193,7 @@ const initializeServerAndDB = async () => {
 
 const seedDefaultData = async () => {
     const adminExists = await db.get('SELECT user_id FROM users WHERE role = ?', ['admin']);
-    
+
     if (!adminExists) {
         const hashedPassword = await bcrypt.hash('admin123', 10);
         await db.run(
@@ -207,7 +201,6 @@ const seedDefaultData = async () => {
             ['System Admin', 'admin', hashedPassword, 'admin']
         );
 
-        // Seed sample wards
         const wards = [
             ['General Ward A', 'general'],
             ['ICU Unit 1', 'icu'],
@@ -215,12 +208,11 @@ const seedDefaultData = async () => {
             ['Pediatric Ward', 'pediatric'],
             ['Maternity Ward', 'maternity']
         ];
-        
+
         for (const ward of wards) {
             await db.run('INSERT OR IGNORE INTO wards (ward_name, ward_type) VALUES (?, ?)', ward);
         }
 
-        // Seed default beds for each ward
         const beds = [
             ['A-101', 1, 'AVAILABLE'],
             ['A-102', 1, 'AVAILABLE'],
@@ -235,11 +227,10 @@ const seedDefaultData = async () => {
         for (const bed of beds) {
             await db.run('INSERT OR IGNORE INTO beds (bed_number, ward_id, status) VALUES (?, ?, ?)', bed);
         }
-        
+
         console.log('Default data seeded. Admin login: admin / admin123');
     }
 
-    // Seed JohnSmith and Dr Prachi if they do not exist
     const johnExists = await db.get('SELECT user_id FROM users WHERE username = ?', ['johnsmith']);
     if (!johnExists) {
         const hashedPassword = await bcrypt.hash('password123', 10);
@@ -260,11 +251,9 @@ const seedDefaultData = async () => {
         console.log('Seeded user Dr Prachi (doctor)');
     }
 
-    // Get the dynamic user ID of Dr Prachi to prevent hardcoded FK constraint failures
     const prachiUser = await db.get('SELECT user_id FROM users WHERE username = ?', ['prachi']);
     const prachiId = prachiUser ? prachiUser.user_id : null;
 
-    // Seed default patients if patients table is empty
     const patientCount = await db.get('SELECT COUNT(*) as count FROM patients');
     if (patientCount.count === 0) {
         const patientsToSeed = [
@@ -281,8 +270,6 @@ const seedDefaultData = async () => {
         }
         console.log('Seeded 4 default patients.');
 
-        // Seed active admissions for these patients so they occupy beds
-        // Patient 1 in Bed 1 (A-101), Patient 2 in Bed 4 (ICU-01), Patient 3 in Bed 6 (ER-01), Patient 4 in Bed 8 (PED-01)
         const admissionsToSeed = [
             [1, 1, prachiId, 'NORMAL', 'ACTIVE', 'Routine recovery', 'Patient admitted for follow-up testing'],
             [2, 4, prachiId, 'EMERGENCY', 'ACTIVE', 'ICU Observation', 'Admitted to ICU for observation'],
@@ -303,29 +290,27 @@ const seedDefaultData = async () => {
         console.log('Seeded active admissions for default patients.');
     }
 
-    // Now seed the clinical features mock data
     const roundsCount = await db.get('SELECT COUNT(*) as count FROM consultation_rounds');
     const patients = await db.all('SELECT patient_id FROM patients');
-    
+
     if (roundsCount.count === 0 && patients.length >= 3) {
         const todayStr = new Date().toISOString().split('T')[0];
-        
-        // Seed 3 pending rounds for today
+
         await db.run(`
             INSERT INTO consultation_rounds (patient_id, doctor_id, vitals_bp, vitals_temp, vitals_pulse, vitals_spo2, findings, treatment_plan, next_round, status)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `, [patients[0].patient_id, 'Dr Prachi', '120/80', 37.2, 72, 98, 'Patient stable, mild fever', 'Continue antibiotics, monitor temp', `${todayStr} 14:00`, 'Pending']);
-        
+
         await db.run(`
             INSERT INTO consultation_rounds (patient_id, doctor_id, vitals_bp, vitals_temp, vitals_pulse, vitals_spo2, findings, treatment_plan, next_round, status)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `, [patients[1].patient_id, 'Dr Prachi', '110/70', 36.8, 68, 99, 'Recovering well', 'Discharge tomorrow if stable', `${todayStr} 16:00`, 'Pending']);
-        
+
         await db.run(`
             INSERT INTO consultation_rounds (patient_id, doctor_id, vitals_bp, vitals_temp, vitals_pulse, vitals_spo2, findings, treatment_plan, next_round, status)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `, [patients[2].patient_id, 'Dr Prachi', '140/90', 38.5, 88, 95, 'High BP, fever spiked', 'Increase antipyretics, BP monitoring', `${todayStr} 18:00`, 'Pending']);
-        
+
         console.log('Seeded 3 pending rounds for today.');
     }
 
@@ -349,7 +334,6 @@ const seedDefaultData = async () => {
 
 // ==================== AUTH ROUTES ====================
 
-// Register user (Admin only)
 app.post('/auth/register', authenticateToken, requireRole(['admin']), async (req, res) => {
     const { name, username, password, role } = req.body;
 
@@ -377,7 +361,6 @@ app.post('/auth/register', authenticateToken, requireRole(['admin']), async (req
     }
 });
 
-// Login
 app.post('/auth/login', async (req, res) => {
     const { username, password } = req.body;
 
@@ -434,12 +417,12 @@ app.get('/users', authenticateToken, requireRole(['admin']), async (req, res) =>
     const { role } = req.query;
     let sql = 'SELECT user_id, name, username, role FROM users';
     const params = [];
-    
+
     if (role) {
         sql += ' WHERE role = ?';
         params.push(role);
     }
-    
+
     try {
         const users = await db.all(sql, params);
         res.json(users.map(u => ({
@@ -491,11 +474,11 @@ app.get('/wards', authenticateToken, async (req, res) => {
 app.get('/wards/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
     const data = await db.get('SELECT * FROM wards WHERE ward_id = ?', [id]);
-    
+
     if (!data) {
         return res.status(404).json({ error: 'Ward not found.' });
     }
-    
+
     res.json({
         wardId: data.ward_id,
         wardName: data.ward_name,
@@ -539,9 +522,9 @@ app.post('/beds', authenticateToken, requireRole(['admin']), async (req, res) =>
 
 app.get('/beds', authenticateToken, async (req, res) => {
     const { wardId, status, type } = req.query;
-    
+
     let sql = `
-        SELECT 
+        SELECT
             b.bed_id, b.bed_number, b.status, b.patient_id,
             w.ward_id, w.ward_name, w.ward_type,
             p.patient_name
@@ -577,11 +560,10 @@ app.get('/beds', authenticateToken, async (req, res) => {
         patientName: item.patient_name || null,
         patientId: item.patient_id
     }));
-    
+
     res.json(updatedData);
 });
 
-// Assign bed to patient (Reception/Admin)
 app.put('/beds/:id/assign', authenticateToken, requireRole(['reception', 'admin']), async (req, res) => {
     const { id } = req.params;
     const { patientId, doctorId, admissionType, diagnosis, notes } = req.body;
@@ -590,7 +572,6 @@ app.put('/beds/:id/assign', authenticateToken, requireRole(['reception', 'admin'
         return res.status(400).json({ error: 'Patient ID is required.' });
     }
 
-    // Check bed exists and is available
     const bed = await db.get('SELECT * FROM beds WHERE bed_id = ?', [id]);
     if (!bed) {
         return res.status(404).json({ error: 'Bed not found.' });
@@ -599,7 +580,6 @@ app.put('/beds/:id/assign', authenticateToken, requireRole(['reception', 'admin'
         return res.status(400).json({ error: 'Bed is already occupied.' });
     }
 
-    // Check patient exists and has no active admission
     const patient = await db.get('SELECT * FROM patients WHERE patient_id = ?', [patientId]);
     if (!patient) {
         return res.status(404).json({ error: 'Patient not found.' });
@@ -613,11 +593,9 @@ app.put('/beds/:id/assign', authenticateToken, requireRole(['reception', 'admin'
         return res.status(400).json({ error: 'Patient already has an active admission.' });
     }
 
-    // Create admission and update bed in transaction
     try {
         await db.run('BEGIN TRANSACTION');
 
-        // Create admission
         const admissionTypeValue = admissionType || 'NORMAL';
         const result = await db.run(
             `INSERT INTO admissions (patient_id, bed_id, doctor_id, admission_type, diagnosis, notes)
@@ -625,21 +603,19 @@ app.put('/beds/:id/assign', authenticateToken, requireRole(['reception', 'admin'
             [patientId, id, doctorId || null, admissionTypeValue, diagnosis || null, notes || null]
         );
 
-        // Update bed
         await db.run(
             'UPDATE beds SET status = ?, patient_id = ? WHERE bed_id = ?',
             ['OCCUPIED', patientId, id]
         );
 
-        // Check ICU alert
         if (admissionTypeValue === 'EMERGENCY') {
             await checkICUOccupancy();
         }
 
         await db.run('COMMIT');
-        res.json({ 
+        res.json({
             message: 'Bed assigned and patient admitted successfully.',
-            admissionId: result.lastID 
+            admissionId: result.lastID
         });
 
     } catch (err) {
@@ -648,7 +624,6 @@ app.put('/beds/:id/assign', authenticateToken, requireRole(['reception', 'admin'
     }
 });
 
-// Update bed status (for cleaning/maintenance)
 app.patch('/beds/:id/status', authenticateToken, requireRole(['admin', 'reception']), async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
@@ -744,7 +719,7 @@ app.get('/patients/:id/history', authenticateToken, async (req, res) => {
     }
 
     const admissions = await db.all(
-        `SELECT 
+        `SELECT
             a.admission_id, a.admission_type, a.admission_status, a.admitted_at, a.discharge_date,
             a.diagnosis, a.notes,
             b.bed_number, w.ward_name, w.ward_type,
@@ -759,7 +734,7 @@ app.get('/patients/:id/history', authenticateToken, async (req, res) => {
     );
 
     const transfers = await db.all(
-        `SELECT 
+        `SELECT
             pt.transfer_id, pt.transfer_reason, pt.transfer_date,
             fb.bed_number as from_bed, tb.bed_number as to_bed,
             fw.ward_name as from_ward, tw.ward_name as to_ward,
@@ -862,9 +837,9 @@ app.post('/admissions', authenticateToken, requireRole(['reception', 'admin']), 
         }
 
         await db.run('COMMIT');
-        res.status(201).json({ 
+        res.status(201).json({
             message: 'Admission created successfully.',
-            admissionId: result.lastID 
+            admissionId: result.lastID
         });
 
     } catch (err) {
@@ -878,7 +853,7 @@ app.get('/admissions', authenticateToken, async (req, res) => {
     const offset = (page - 1) * limit;
 
     let sql = `
-        SELECT 
+        SELECT
             a.admission_id, a.admission_type, a.admission_status, a.admitted_at, a.discharge_date,
             a.diagnosis, a.notes,
             p.patient_id, p.patient_name, p.age, p.gender,
@@ -974,19 +949,16 @@ app.put('/admissions/:id/discharge', authenticateToken, requireRole(['doctor', '
     try {
         await db.run('BEGIN TRANSACTION');
 
-        // Update admission
         await db.run(
             'UPDATE admissions SET admission_status = ?, discharge_date = CURRENT_TIMESTAMP WHERE admission_id = ?',
             ['DISCHARGED', id]
         );
 
-        // Free bed (mark for cleaning)
         await db.run(
             'UPDATE beds SET status = ?, patient_id = NULL WHERE bed_id = ?',
             ['CLEANING', admission.bed_id]
         );
 
-        // Create discharge record
         await db.run(
             `INSERT INTO discharge_records (admission_id, patient_id, discharged_by, discharge_type, final_diagnosis, discharge_notes)
              VALUES (?, ?, ?, ?, ?, ?)`,
@@ -1032,25 +1004,21 @@ app.post('/transfers', authenticateToken, requireRole(['doctor', 'admin']), asyn
     try {
         await db.run('BEGIN TRANSACTION');
 
-        // Update old bed
         await db.run(
             'UPDATE beds SET status = ?, patient_id = NULL WHERE bed_id = ?',
             ['AVAILABLE', admission.bed_id]
         );
 
-        // Update new bed
         await db.run(
             'UPDATE beds SET status = ?, patient_id = ? WHERE bed_id = ?',
             ['OCCUPIED', admission.patient_id, toBedId]
         );
 
-        // Update admission
         await db.run(
             'UPDATE admissions SET bed_id = ? WHERE admission_id = ?',
             [toBedId, admissionId]
         );
 
-        // Log transfer
         await db.run(
             `INSERT INTO patient_transfers (admission_id, from_bed_id, to_bed_id, from_ward_id, to_ward_id, transfer_reason, transferred_by)
              VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -1066,12 +1034,10 @@ app.post('/transfers', authenticateToken, requireRole(['doctor', 'admin']), asyn
     }
 });
 
-// ==================== DASHBOARD & ANALYTICS ====================
-
 app.get('/dashboard/hospital', authenticateToken, requireRole(['admin']), async (req, res) => {
-    // Bed statistics
+
     const bedStats = await db.get(`
-        SELECT 
+        SELECT
             COUNT(*) as total_beds,
             SUM(CASE WHEN status = 'OCCUPIED' THEN 1 ELSE 0 END) as occupied_beds,
             SUM(CASE WHEN status = 'AVAILABLE' THEN 1 ELSE 0 END) as available_beds,
@@ -1081,27 +1047,23 @@ app.get('/dashboard/hospital', authenticateToken, requireRole(['admin']), async 
         FROM beds
     `);
 
-    const occupancyRate = bedStats.total_beds > 0 
-        ? ((bedStats.occupied_beds / bedStats.total_beds) * 100).toFixed(2) 
+    const occupancyRate = bedStats.total_beds > 0
+        ? ((bedStats.occupied_beds / bedStats.total_beds) * 100).toFixed(2)
         : 0;
 
-    // Active admissions
     const activeAdmissions = await db.get(
         'SELECT COUNT(*) as count FROM admissions WHERE admission_status = ?',
         ['ACTIVE']
     );
 
-    // Total patients
     const totalPatients = await db.get('SELECT COUNT(*) as count FROM patients');
 
-    // Today's admissions
     const todayAdmissions = await db.get(
         "SELECT COUNT(*) as count FROM admissions WHERE date(admitted_at) = date('now')"
     );
 
-    // Ward breakdown
     const wardBreakdown = await db.all(`
-        SELECT 
+        SELECT
             w.ward_name, w.ward_type,
             COUNT(b.bed_id) as total_beds,
             SUM(CASE WHEN b.status = 'OCCUPIED' THEN 1 ELSE 0 END) as occupied,
@@ -1113,9 +1075,8 @@ app.get('/dashboard/hospital', authenticateToken, requireRole(['admin']), async 
         ORDER BY w.ward_name
     `);
 
-    // Recent emergency admissions
     const recentEmergencies = await db.all(`
-        SELECT 
+        SELECT
             a.admission_id, a.admitted_at, a.diagnosis,
             p.patient_name, p.age,
             b.bed_number, w.ward_name
@@ -1127,9 +1088,8 @@ app.get('/dashboard/hospital', authenticateToken, requireRole(['admin']), async 
         ORDER BY a.admitted_at DESC LIMIT 5
     `);
 
-    // ICU occupancy check for alert
     const icuStats = await db.get(`
-        SELECT 
+        SELECT
             COUNT(*) as total_icu,
             SUM(CASE WHEN status = 'OCCUPIED' THEN 1 ELSE 0 END) as occupied_icu
         FROM beds b
@@ -1176,11 +1136,9 @@ app.get('/dashboard/hospital', authenticateToken, requireRole(['admin']), async 
     });
 });
 
-// ==================== NOTIFICATIONS ====================
-
 const checkICUOccupancy = async () => {
     const icuStats = await db.get(`
-        SELECT 
+        SELECT
             COUNT(*) as total_icu,
             SUM(CASE WHEN status = 'OCCUPIED' THEN 1 ELSE 0 END) as occupied_icu
         FROM beds b
@@ -1218,13 +1176,10 @@ app.put('/notifications/:id/read', authenticateToken, async (req, res) => {
     res.json({ message: 'Notification marked as read.' });
 });
 
-// ==================== CLINICAL WORKFLOW APIs ====================
-
-// Follow-ups API
 // GET /api/followups - Returns all patients with their latest follow-up
 app.get('/api/followups', authenticateToken, async (req, res) => {
     const query = `
-        SELECT p.patient_id as patientId, p.patient_name as patientName, 
+        SELECT p.patient_id as patientId, p.patient_name as patientName,
                f.status, f.notes, f.updated_at as updatedAt, f.updated_by as updatedBy
         FROM patients p
         LEFT JOIN (
@@ -1294,7 +1249,7 @@ app.get('/api/followups/latest/:patient_id', authenticateToken, async (req, res)
 // GET /api/followups/critical/count - Count of patients currently in 'Critical' status
 app.get('/api/followups/critical/count', authenticateToken, async (req, res) => {
     const query = `
-        SELECT COUNT(*) as count 
+        SELECT COUNT(*) as count
         FROM (
             SELECT status
             FROM followups
@@ -1310,7 +1265,6 @@ app.get('/api/followups/critical/count', authenticateToken, async (req, res) => 
     }
 });
 
-// Diagnosis API
 // GET /api/diagnosis/:patient_id - All diagnoses for patient, ordered created_at DESC
 app.get('/api/diagnosis/:patient_id', authenticateToken, async (req, res) => {
     const { patient_id } = req.params;
@@ -1361,16 +1315,16 @@ app.get('/api/diagnosis/latest/:patient_id', authenticateToken, async (req, res)
 app.get('/api/patients/:id/detail', authenticateToken, async (req, res) => {
     const { id } = req.params;
     const query = `
-        SELECT 
-            p.patient_id as patientId, 
-            p.patient_name as patientName, 
-            p.age, 
-            p.gender, 
-            p.phone as contact, 
+        SELECT
+            p.patient_id as patientId,
+            p.patient_name as patientName,
+            p.age,
+            p.gender,
+            p.phone as contact,
             a.admitted_at as admission_date,
             a.admission_id as admissionId,
-            b.bed_number, 
-            w.ward_type, 
+            b.bed_number,
+            w.ward_type,
             a.admission_status as status
         FROM patients p
         LEFT JOIN admissions a ON p.patient_id = a.patient_id AND a.admission_status = 'ACTIVE'
@@ -1389,7 +1343,6 @@ app.get('/api/patients/:id/detail', authenticateToken, async (req, res) => {
     }
 });
 
-// Consultation Rounds API
 // GET /api/rounds - All rounds for logged-in doctor, ordered created_at DESC
 app.get('/api/rounds', authenticateToken, async (req, res) => {
     try {
@@ -1421,7 +1374,7 @@ app.get('/api/rounds/today', authenticateToken, async (req, res) => {
              LEFT JOIN admissions a ON p.patient_id = a.patient_id AND a.admission_status = 'ACTIVE'
              LEFT JOIN beds b ON a.bed_id = b.bed_id
              LEFT JOIN wards w ON b.ward_id = w.ward_id
-             WHERE (r.doctor_id = ? OR r.doctor_id = ?) 
+             WHERE (r.doctor_id = ? OR r.doctor_id = ?)
                AND (date(r.next_round) = ? OR (r.status = 'Pending' AND date(r.next_round) <= ?))
              ORDER BY r.next_round ASC`,
             [req.user.name, String(req.user.userId), today, today]
@@ -1453,18 +1406,18 @@ app.post('/api/rounds', authenticateToken, async (req, res) => {
         return res.status(400).json({ error: 'patient_id, findings, and doctor_id are required.' });
     }
     try {
-        // If there was a previous pending round for this patient, mark it as Completed or update it
+
         const today = new Date().toISOString().split('T')[0];
         const existingPending = await db.get(
-            `SELECT id FROM consultation_rounds 
-             WHERE patient_id = ? AND status = 'Pending' AND date(next_round) <= ? 
+            `SELECT id FROM consultation_rounds
+             WHERE patient_id = ? AND status = 'Pending' AND date(next_round) <= ?
              ORDER BY next_round ASC LIMIT 1`,
             [patient_id, today]
         );
-        
+
         if (existingPending) {
             await db.run(
-                `UPDATE consultation_rounds 
+                `UPDATE consultation_rounds
                  SET vitals_bp = ?, vitals_temp = ?, vitals_pulse = ?, vitals_spo2 = ?, findings = ?, treatment_plan = ?, next_round = ?, status = 'Completed', doctor_id = ?
                  WHERE id = ?`,
                 [vitals_bp || null, vitals_temp || null, vitals_pulse || null, vitals_spo2 || null, findings, treatment_plan || null, next_round || null, doctor_id, existingPending.id]
@@ -1477,7 +1430,6 @@ app.post('/api/rounds', authenticateToken, async (req, res) => {
             );
         }
 
-        // Automatically schedule the next round by inserting a Pending record if next_round is provided
         if (next_round) {
             await db.run(
                 `INSERT INTO consultation_rounds (patient_id, doctor_id, status, next_round)
@@ -1511,8 +1463,6 @@ app.put('/api/rounds/:id/status', authenticateToken, async (req, res) => {
     }
 });
 
-// ==================== ERROR HANDLING ====================
-
 app.use((req, res) => {
     res.status(404).json({ error: 'Endpoint not found.' });
 });
@@ -1522,7 +1472,6 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: 'Internal server error.' });
 });
 
-// ==================== START ====================
 initializeServerAndDB();
 
 module.exports = app;

@@ -13,9 +13,8 @@ const Emergency = () => {
   useEffect(() => {
     fetchEmergencyData();
 
-    // Poll data every 15 seconds
     const dataInterval = setInterval(fetchEmergencyData, 15000);
-    // Tick clock every 10 seconds to update duration columns in real-time
+
     const timeInterval = setInterval(() => {
       setCurrentTime(new Date());
     }, 10000);
@@ -35,14 +34,12 @@ const Emergency = () => {
       ]);
 
       setEmergencyBeds(bedsData);
-      
-      // Filter only Active Emergency admissions
+
       const activeEmergencies = (admissionsData.data || []).filter(
         a => a.admissionType === 'EMERGENCY' && a.admissionStatus === 'ACTIVE'
       );
       setEmergencyAdmissions(activeEmergencies);
 
-      // Compute ICU occupancy thresholds
       if (icuBedsData && icuBedsData.length > 0) {
         const total = icuBedsData.length;
         const occupied = icuBedsData.filter(b => b.status === 'OCCUPIED').length;
@@ -93,7 +90,7 @@ const Emergency = () => {
         </div>
       )}
 
-      {/* ICU Occupancy Alert Banners */}
+      {}
       {icuStatus && icuStatus.rate >= 70 && (
         <div className="alert alert-error" style={{ background: icuStatus.rate >= 90 ? '#fef2f2' : '#fffbeb', borderColor: icuStatus.rate >= 90 ? '#fecaca' : '#fef3c7', color: icuStatus.rate >= 90 ? '#991b1b' : '#92400e', marginBottom: '20px', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
           <strong style={{ fontSize: '14px' }}>{icuStatus.rate >= 90 ? '🚨 ICU CRITICAL OCCUPANCY ALERT' : '⚠️ HIGH ICU OCCUPANCY WARNING'}</strong>
@@ -101,7 +98,7 @@ const Emergency = () => {
         </div>
       )}
 
-      {/* Emergency Stats */}
+      {}
       <div className="stats-grid">
         <div className="stat-card danger">
           <div className="stat-icon">🚨</div>
@@ -130,7 +127,7 @@ const Emergency = () => {
         </div>
       </div>
 
-      {/* Emergency Beds Grid */}
+      {}
       <div className="card">
         <h3 className="card-title">Emergency Ward Beds</h3>
         {emergencyBeds.length === 0 ? (
@@ -138,12 +135,12 @@ const Emergency = () => {
         ) : (
           <div className="emergency-bed-grid">
             {emergencyBeds.map(bed => (
-              <div 
-                key={bed.bedId} 
+              <div
+                key={bed.bedId}
                 className={`emergency-bed-card ${bed.status.toLowerCase()}`}
               >
-                <div 
-                  className="bed-status-indicator" 
+                <div
+                  className="bed-status-indicator"
                   style={{ background: getStatusColor(bed.status) }}
                 ></div>
                 <span className="bed-number">{bed.bedNumber}</span>
@@ -160,7 +157,7 @@ const Emergency = () => {
         )}
       </div>
 
-      {/* Active Emergency Cases Table */}
+      {}
       <div className="card">
         <h3 className="card-title">Active Emergency Cases</h3>
         {emergencyAdmissions.length === 0 ? (
@@ -185,7 +182,7 @@ const Emergency = () => {
                   const diff = currentTime - admitted;
                   const hours = Math.floor(diff / (1000 * 60 * 60));
                   const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                  
+
                   return (
                     <tr key={em.admissionId} className={hours >= 6 ? 'overdue' : ''}>
                       <td><strong>{em.patientName}</strong></td>

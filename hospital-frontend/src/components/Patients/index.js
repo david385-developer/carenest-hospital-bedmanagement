@@ -60,7 +60,6 @@ const Patients = () => {
     );
   }
 
-  // Calculate paging stats
   let pagingText = '';
   if (pagination && pagination.total > 0) {
     const startItem = (pagination.page - 1) * pagination.limit + 1;
@@ -68,7 +67,6 @@ const Patients = () => {
     pagingText = `Showing ${startItem} - ${endItem} of ${pagination.total} patients`;
   }
 
-  // Generate numerical pagination buttons
   const renderPaginationButtons = () => {
     if (!pagination || pagination.totalPages <= 1) return null;
     const buttons = [];
@@ -104,8 +102,8 @@ const Patients = () => {
         <h2>👤 Patients Directory</h2>
         <div className="search-box">
           <span className="search-icon">🔍</span>
-          <input 
-            type="text" 
+          <input
+            type="text"
             placeholder="Search patients by name..."
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
@@ -121,7 +119,7 @@ const Patients = () => {
 
       <div className="patients-grid">
         {patients.map(patient => (
-          <PatientCard 
+          <PatientCard
             key={patient.patientId}
             patient={patient}
             onViewHistory={viewHistory}
@@ -140,19 +138,19 @@ const Patients = () => {
 
       {pagination && pagination.totalPages > 1 && (
         <div className="pagination" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', marginTop: '30px' }}>
-          <button 
-            disabled={page === 1} 
+          <button
+            disabled={page === 1}
             onClick={() => setPage(p => p - 1)}
             className="pagination-arrow-btn"
             type="button"
           >
             ← Prev
           </button>
-          
+
           {renderPaginationButtons()}
-          
-          <button 
-            disabled={page === pagination.totalPages} 
+
+          <button
+            disabled={page === pagination.totalPages}
             onClick={() => setPage(p => p + 1)}
             className="pagination-arrow-btn"
             type="button"

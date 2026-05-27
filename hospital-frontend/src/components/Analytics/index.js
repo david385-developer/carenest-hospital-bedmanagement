@@ -30,7 +30,6 @@ const Analytics = () => {
     }
   };
 
-  // Helper to determine occupancy status class
   const getOccupancyStatus = (occupied, total) => {
     if (total === 0) return { label: 'Empty', class: 'empty', color: '#94a3b8' };
     const pct = (occupied / total) * 100;
@@ -86,7 +85,7 @@ const Analytics = () => {
         <h2>📈 Hospital Analytics & Occupancy Telemetry</h2>
       </div>
 
-      {/* Summary Cards */}
+      {}
       <div className="stats-grid">
         <div className="stat-card primary">
           <div className="stat-icon">📊</div>
@@ -124,7 +123,7 @@ const Analytics = () => {
         <p style={{ fontSize: '13px', color: '#64748b', marginTop: '-10px', marginBottom: '20px' }}>
           Real-time color-coded density indicator. Green: &lt;50% occupancy | Yellow: 50% - 80% occupancy | Red: &ge;80% critical occupancy.
         </p>
-        
+
         {occupancyData.length === 0 ? (
           <div className="empty-state" style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>
             <span style={{ fontSize: '32px' }}>🏢</span>
@@ -174,7 +173,7 @@ const Analytics = () => {
                   </div>
 
                   <h4 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: '700', color: '#0f172a' }}>{ward.wardName}</h4>
-                  
+
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '8px' }}>
                     <span style={{ fontSize: '24px', fontWeight: '800', color: '#0f172a' }}>
                       {occupiedPct}%
@@ -224,18 +223,18 @@ const Analytics = () => {
                 </div>
                 <div className="ward-bar-track">
                   <div className="ward-bar-fill">
-                    <div 
-                      className="bar-segment occupied" 
+                    <div
+                      className="bar-segment occupied"
                       style={{ width: `${occupiedPct}%` }}
                       title={`Occupied: ${ward.occupied}`}
                     ></div>
-                    <div 
-                      className="bar-segment cleaning" 
+                    <div
+                      className="bar-segment cleaning"
                       style={{ width: `${cleaningPct}%` }}
                       title={`Cleaning: ${ward.cleaning}`}
                     ></div>
-                    <div 
-                      className="bar-segment available" 
+                    <div
+                      className="bar-segment available"
                       style={{ width: `${availablePct}%` }}
                       title={`Available: ${ward.available}`}
                     ></div>
@@ -264,7 +263,7 @@ const Analytics = () => {
             { label: 'Reserved', value: stats?.bedStats?.reserved || 0, color: '#f59e0b', total: stats?.bedStats?.total || 0 },
           ].map(item => (
             <div key={item.label} className="status-item">
-              <div className="status-ring" style={{ 
+              <div className="status-ring" style={{
                 background: `conic-gradient(${item.color} ${item.total > 0 ? (item.value / item.total) * 360 : 0}deg, #e2e8f0 0deg)`
               }}>
                 <div className="status-ring-inner">

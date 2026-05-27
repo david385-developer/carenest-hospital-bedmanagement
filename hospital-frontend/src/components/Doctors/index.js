@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../AuthContext';
+import { API_BASE } from '../../utils/api';
 import './index.css';
-
-const API_BASE = 'http://localhost:3001';
 
 const Doctors = () => {
   const { token, logout } = useContext(AuthContext);

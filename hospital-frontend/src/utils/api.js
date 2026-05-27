@@ -1,4 +1,7 @@
-const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:3001';
+export const API_BASE = process.env.REACT_APP_API_BASE || 
+  (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:3001'
+    : 'https://carenest-hospital-bedmanagement.onrender.com');
 
 const getToken = () => localStorage.getItem('token');
 

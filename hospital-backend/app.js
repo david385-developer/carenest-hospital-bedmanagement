@@ -260,6 +260,10 @@ const seedDefaultData = async () => {
         console.log('Seeded user Dr Prachi (doctor)');
     }
 
+    // Get the dynamic user ID of Dr Prachi to prevent hardcoded FK constraint failures
+    const prachiUser = await db.get('SELECT user_id FROM users WHERE username = ?', ['prachi']);
+    const prachiId = prachiUser ? prachiUser.user_id : null;
+
     // Seed default patients if patients table is empty
     const patientCount = await db.get('SELECT COUNT(*) as count FROM patients');
     if (patientCount.count === 0) {
@@ -280,10 +284,10 @@ const seedDefaultData = async () => {
         // Seed active admissions for these patients so they occupy beds
         // Patient 1 in Bed 1 (A-101), Patient 2 in Bed 4 (ICU-01), Patient 3 in Bed 6 (ER-01), Patient 4 in Bed 8 (PED-01)
         const admissionsToSeed = [
-            [1, 1, 5, 'NORMAL', 'ACTIVE', 'Routine recovery', 'Patient admitted for follow-up testing'],
-            [2, 4, 5, 'EMERGENCY', 'ACTIVE', 'ICU Observation', 'Admitted to ICU for observation'],
-            [3, 6, 5, 'EMERGENCY', 'ACTIVE', 'Cardiac warning', 'High blood pressure, monitoring needed'],
-            [4, 8, 5, 'NORMAL', 'ACTIVE', 'Pediatric check', 'Admitted for pediatric observation']
+            [1, 1, prachiId, 'NORMAL', 'ACTIVE', 'Routine recovery', 'Patient admitted for follow-up testing'],
+            [2, 4, prachiId, 'EMERGENCY', 'ACTIVE', 'ICU Observation', 'Admitted to ICU for observation'],
+            [3, 6, prachiId, 'EMERGENCY', 'ACTIVE', 'Cardiac warning', 'High blood pressure, monitoring needed'],
+            [4, 8, prachiId, 'NORMAL', 'ACTIVE', 'Pediatric check', 'Admitted for pediatric observation']
         ];
         for (const adm of admissionsToSeed) {
             await db.run(

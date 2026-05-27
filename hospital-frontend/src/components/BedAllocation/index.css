@@ -245,8 +245,12 @@
   margin-top: 24px;
 }
 
-.btn-primary {
+.modal-actions .btn-primary,
+.modal-actions .btn-secondary {
   flex: 1;
+}
+
+.btn-primary {
   padding: 12px;
   background: #0f766e;
   color: white;
@@ -263,7 +267,6 @@
 }
 
 .btn-secondary {
-  flex: 1;
   padding: 12px;
   background: #f1f5f9;
   color: #475569;

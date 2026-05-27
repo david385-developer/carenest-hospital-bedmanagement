@@ -118,7 +118,7 @@ const Doctors = () => {
     <div className="doctors-page">
       <div className="page-header">
         <h2>👨‍⚕️ Doctor Management</h2>
-        <button className="btn-primary" onClick={() => { setShowAddForm(true); setSuccessMsg(''); setErrorMsg(''); }}>
+        <button className="btn-primary btn-sm" onClick={() => { setShowAddForm(true); setSuccessMsg(''); setErrorMsg(''); }}>
           + Add Doctor
         </button>
       </div>

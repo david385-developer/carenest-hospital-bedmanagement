@@ -186,7 +186,7 @@ const Employees = () => {
             <option value="reception">Reception</option>
           </select>
         </div>
-        <button className="btn-primary" onClick={() => { setShowModal(true); setModalError(''); }}>
+        <button className="btn-primary btn-sm" onClick={() => { setShowModal(true); setModalError(''); }}>
           + Add Employee
         </button>
       </div>

@@ -119,7 +119,7 @@ Quick consultation round record form optimized for mobile touch inputs
 | :--- | :--- | :--- |
 | Admin | admin | admin123 |
 | Doctor | prachi | password123 |
-| Reception | johnsmith | reception123 |
+| Reception | johnsmith | password123 |
 
 ## API Reference
 
